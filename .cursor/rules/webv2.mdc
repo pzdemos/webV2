@@ -1,0 +1,14 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Your rule content
+
+- You can @ files here
+- You can use markdown but dont have to
+
+1.  Answers and explanations are in Chinese
+2. Give priority to daisyUI, and only consider custom animation styles if tailwind or daisyUI cannot solve the style animation
+3.  Interface design needs to consider high quality, ease of use and experience
