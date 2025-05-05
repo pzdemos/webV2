@@ -24,19 +24,32 @@ export const useUserStore = defineStore('user', () => {
       uid.value = res.data.data.uid
       role.value = res.data.data.role !== undefined ? res.data.data.role : 4
       
-      // 如果记住密码，保存用户名和密码
+      // 保存登录凭据到localStorage
+      localStorage.setItem('token', token.value)
+      localStorage.setItem('username', username.value)
+      localStorage.setItem('uid', uid.value)
+      localStorage.setItem('role', role.value)
+      
+      // 如果记住密码，保存用户名和密码到localStorage
       if (userData.rememberMe) {
-        localStorage.setItem('password', btoa(userData.password)) // 简单编码
+        localStorage.setItem('rememberMe', 'true')
+        localStorage.setItem('savedUsername', userData.username)
+        localStorage.setItem('savedPassword', btoa(userData.password)) // 简单编码
+        console.log('密码已保存到本地存储', { username: userData.username })
       } else {
-        localStorage.removeItem('password')
+        // 如果不记住密码，清除之前存储的密码
+        localStorage.removeItem('rememberMe')
+        localStorage.removeItem('savedUsername')
+        localStorage.removeItem('savedPassword')
+        console.log('已清除本地存储的密码')
       }
       
       ElMessage.success('登录成功！')
       return { success: true }
     } catch (err) {
       const message = err.response?.data?.message || '登录失败，请检查用户名和密码'
-      error.value = message
-      ElMessage.error(message)
+      error.value = message // 仍然设置错误状态，但不在界面显示
+      ElMessage.error(message) // 使用ElMessage直接显示错误
       return { success: false, message }
     } finally {
       loading.value = false
@@ -54,8 +67,8 @@ export const useUserStore = defineStore('user', () => {
       return { success: true }
     } catch (err) {
       const message = err.response?.data?.message || '注册失败，请稍后再试'
-      error.value = message
-      ElMessage.error(message)
+      error.value = message // 仍然设置错误状态，但不在界面显示
+      ElMessage.error(message) // 使用ElMessage直接显示错误
       return { success: false, message }
     } finally {
       loading.value = false
@@ -68,17 +81,43 @@ export const useUserStore = defineStore('user', () => {
     username.value = ''
     uid.value = ''
     role.value = ''
-    localStorage.removeItem('password')
+    
+    // 清除所有登录信息，但保留记住的用户名和密码
+    localStorage.removeItem('token')
+    localStorage.removeItem('username')
+    localStorage.removeItem('uid')
+    localStorage.removeItem('role')
+    
     ElMessage.success('已退出登录')
   }
   
   // 检查是否已登录
   const isLoggedIn = () => !!token.value
   
+  // 获取记住的用户名
+  const getRememberedUsername = () => {
+    const isRemembered = localStorage.getItem('rememberMe') === 'true'
+    if (!isRemembered) {
+      return ''
+    }
+    
+    return localStorage.getItem('savedUsername') || ''
+  }
+  
   // 获取记住的用户密码
   const getRememberedPassword = () => {
-    const savedPassword = localStorage.getItem('password')
-    return savedPassword ? atob(savedPassword) : ''
+    const isRemembered = localStorage.getItem('rememberMe') === 'true'
+    if (!isRemembered) {
+      return ''
+    }
+    
+    const savedPassword = localStorage.getItem('savedPassword')
+    try {
+      return savedPassword ? atob(savedPassword) : ''
+    } catch (e) {
+      console.error('密码解码失败:', e)
+      return ''
+    }
   }
 
   return {
@@ -92,6 +131,7 @@ export const useUserStore = defineStore('user', () => {
     userRegister,
     logout,
     isLoggedIn,
+    getRememberedUsername,
     getRememberedPassword
   }
 }, {

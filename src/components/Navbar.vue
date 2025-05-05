@@ -114,14 +114,10 @@ const menuItems = [
   { name: '首页', path: '/' },
   { name: '新闻中心', path: '/news' },
   { name: '产品服务', path: '/product' },
-  { name: '登录', path: '/login', hideWhenLoggedIn: true },
 ];
 
 // 根据登录状态过滤菜单项
 const filteredMenuItems = computed(() => {
-  if (userStore.isLoggedIn()) {
-    return menuItems.filter(item => !item.hideWhenLoggedIn);
-  }
   return menuItems;
 });
 
