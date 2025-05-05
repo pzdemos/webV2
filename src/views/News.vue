@@ -3,7 +3,7 @@
     <!-- 新闻头部 -->
     <div
       class="news-header h-64 md:h-96 bg-cover bg-center rounded-lg shadow-lg"
-      :style="{ backgroundImage: `url('http://localhost:5200/asset/new-bg.jpg')` }"
+      :style="{ backgroundImage: `url('${newsBgImage}')` }"
     >
       <!-- 可添加标题或其他内容 -->
     </div>
@@ -187,7 +187,7 @@
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { getNewsList } from "@/utils/api";
+import { getNewsList, getWebsiteConfigs } from "@/utils/api";
 import formatTime from "@/utils/formatTime";
 import { useRouter } from "vue-router";
 import Empty from "@/components/Empty.vue";
@@ -198,6 +198,7 @@ const visible = ref(false);
 const newlist = ref([]);
 const topNewsList = ref([]);
 const router = useRouter();
+const newsBgImage = ref("http://localhost:5200/asset/new-bg.jpg");
 
 // 新闻分类映射
 const categoryMap = {
@@ -239,11 +240,45 @@ const tabNews = computed(() =>
   _.groupBy(newlist.value, (item) => item.category)
 );
 
-// 获取新闻列表
+// 获取新闻列表和网站配置
 onMounted(async () => {
-  const res = await getNewsList();
-  newlist.value = res.data.data;
-  topNewsList.value = newlist.value;
+  try {
+    // 获取新闻列表
+    console.log('News组件：开始获取新闻列表...');
+    const newsRes = await getNewsList();
+    if (newsRes.data && newsRes.data.data) {
+      newlist.value = newsRes.data.data;
+      topNewsList.value = newlist.value;
+      console.log('News组件：获取到新闻数据', newlist.value.length, '条');
+    } else {
+      console.warn('News组件：新闻数据格式不正确', newsRes.data);
+    }
+  } catch (error) {
+    console.error('获取新闻列表失败:', error);
+  }
+  
+  // 获取网站配置
+  try {
+    console.log('News组件：开始获取背景图配置...');
+    const configRes = await getWebsiteConfigs();
+    console.log('News组件：获取配置响应', configRes);
+    
+    if (configRes.data && configRes.data.data) {
+      const configs = configRes.data.data;
+      console.log('News组件：获取到配置数据', configs);
+      
+      if (configs.news_bg_image) {
+        console.log('News组件：设置背景图为', configs.news_bg_image);
+        newsBgImage.value = `http://localhost:5200${configs.news_bg_image}`;
+      } else {
+        console.warn('News组件：未找到news_bg_image配置，使用默认值');
+      }
+    } else {
+      console.warn('News组件：响应数据格式不正确', configRes.data);
+    }
+  } catch (error) {
+    console.error('获取新闻背景图失败:', error);
+  }
 });
 
 // 计算搜索结果

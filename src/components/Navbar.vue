@@ -4,7 +4,7 @@
     <div class="flex-1">
       <a class="btn btn-ghost font-serif text-xl md:text-2xl group">
         <span class="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent group-hover:scale-105 transition-transform inline-block">
-          SMart-ck
+          {{ brandName }}
         </span>
         <div class="w-0 group-hover:w-full h-0.5 bg-gradient-to-r from-blue-400 to-purple-400 transition-all duration-300"></div>
       </a>
@@ -100,13 +100,15 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import ThemeSwitcher from "@/components/ThemeSwitcher.vue";
 import { useUserStore } from '@/stores/user';
+import { getWebsiteConfigs } from "@/utils/api";
 
 const router = useRouter();
 const userStore = useUserStore();
+const brandName = ref('SMart-ck'); // 默认值
 
 const menuItems = [
   { name: '首页', path: '/' },
@@ -128,6 +130,27 @@ const handleLogout = () => {
   userStore.logout();
   router.push('/');
 };
+
+// 获取网站配置
+onMounted(async () => {
+  try {
+    const res = await getWebsiteConfigs();
+    
+    if (res.data && res.data.data) {
+      const configs = res.data.data;
+      
+      if (configs.brand_name) {
+        brandName.value = configs.brand_name;
+      } else {
+        console.warn('Navbar组件：未找到brand_name配置，使用默认值');
+      }
+    } else {
+      console.warn('Navbar组件：响应数据格式不正确', res.data);
+    }
+  } catch (error) {
+    console.error('获取品牌名称失败:', error);
+  }
+});
 </script>
 
 <style scoped>

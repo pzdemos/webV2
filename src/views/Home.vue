@@ -48,7 +48,7 @@
         <!-- 副标题 -->
         <div class="opacity-0 animate-fadeIn">
           <p class="text-xl md:text-2xl bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent font-medium tracking-wider">
-            科技改变生活
+            {{ subtitle }}
           </p>
           <div class="mt-2 w-24 h-1 bg-gradient-to-r from-blue-400 to-purple-400 mx-auto rounded-full"></div>
         </div>
@@ -68,15 +68,42 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
+import { getWebsiteConfigs } from "@/utils/api";
 
 const typingText = ref("");
 const fullTitle = ref("");
-const titleUrls = () => {
-    return '互联网+时代，让生活更美好！';
-};
+const subtitle = ref("科技改变生活");
 
-onMounted(() => {
-  fullTitle.value = titleUrls();
+onMounted(async () => {
+  try {
+    // 获取网站配置
+    const res = await getWebsiteConfigs();
+    
+    if (res.data && res.data.data) {
+      const configs = res.data.data;
+      
+      if (configs.home_title) {
+        fullTitle.value = configs.home_title;
+      } else {
+        console.warn('Home组件：未找到home_title配置，使用默认值');
+        fullTitle.value = '互联网+时代，让生活更美好！';
+      }
+      
+      if (configs.home_subtitle) {
+        subtitle.value = configs.home_subtitle;
+      } else {
+        console.warn('Home组件：未找到home_subtitle配置，使用默认值');
+      }
+    } else {
+      console.warn('Home组件：响应数据格式不正确', res.data);
+      fullTitle.value = '互联网+时代，让生活更美好！';
+    }
+  } catch (error) {
+    console.error('获取网站配置失败:', error);
+    fullTitle.value = '互联网+时代，让生活更美好！';
+  }
+  
+  // 开始打字效果
   startTypingAnimation();
 });
 
