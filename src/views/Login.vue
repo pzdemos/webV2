@@ -215,7 +215,7 @@ const validateForm = () => {
   if (!username.value) {
     usernameError.value = '用户名不能为空';
     isValid = false;
-  } else if (username.value.length < 3) {
+  } else if (username.value.length < 2) {
     usernameError.value = '用户名长度不能少于3个字符';
     isValid = false;
   }

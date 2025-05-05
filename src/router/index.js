@@ -3,6 +3,7 @@ import Home from "@/views/Home.vue";
 import News from "@/views/News.vue";
 import NewsDetail from "@/views/NewsDetail.vue";
 import Products from "@/views/Products.vue";
+import ProductDetail from "@/views/ProductDetail.vue";
 import Login from "@/views/Login.vue";
 import Register from '@/views/Register.vue';
 import { useUserStore } from '@/stores/user';
@@ -27,6 +28,11 @@ const routes = [
         path: '/product',
         name: 'product',
         component: Products
+    },
+    {
+        path: '/product/:id',
+        name: 'productDetail',
+        component: ProductDetail
     },
     {
         path: '/login',

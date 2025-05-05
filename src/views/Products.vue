@@ -37,7 +37,7 @@
         <div v-for="product in filteredProducts" :key="product.pid" 
              class="product-card bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transition-all duration-300 transform hover:-translate-y-1">
           <!-- 产品图片 -->
-          <div class="relative h-48 overflow-hidden group cursor-pointer" @click="showProductDetail(product)">
+          <div class="relative h-48 overflow-hidden group cursor-pointer" @click="navigateToDetail(product)">
             <img 
               :src="`http://localhost:5200${product.cover}`" 
               :alt="product.title"
@@ -52,7 +52,7 @@
           
           <!-- 产品信息 -->
           <div class="p-6">
-            <h3 class="text-xl font-semibold mb-2 text-gray-800 dark:text-white cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors" @click="showProductDetail(product)">
+            <h3 class="text-xl font-semibold mb-2 text-gray-800 dark:text-white cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors" @click="navigateToDetail(product)">
               {{ product.title }}
             </h3>
             <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
@@ -62,7 +62,7 @@
               <span class="text-sm text-gray-500 dark:text-gray-400">
                 {{ formatTime.getTime(product.updateTime) }}
               </span>
-              <button @click="showProductDetail(product)" 
+              <button @click="navigateToDetail(product)" 
                       class="btn-more px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg transition-all duration-300">
                 了解更多
               </button>
@@ -70,61 +70,6 @@
           </div>
         </div>
       </template>
-    </div>
-
-    <!-- 产品详情弹窗 -->
-    <div v-if="selectedProduct" 
-         class="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50 backdrop-blur-sm transition-all duration-300"
-         @click.self="closeProductDetail">
-      <div class="product-modal bg-white dark:bg-gray-800 rounded-xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl"
-           @click.stop>
-        <div class="relative flex flex-col h-[85vh]">
-          <!-- 头部图片区域 -->
-          <div class="relative h-72 md:h-80 bg-gray-100 dark:bg-gray-900 flex-shrink-0">
-            <img 
-              :src="`http://localhost:5200${selectedProduct.cover}`" 
-              :alt="selectedProduct.title"
-              class="w-full h-full object-cover"
-            />
-            <div class="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent"></div>
-            
-            <!-- 返回按钮 -->
-            <button @click="closeProductDetail" 
-                    class="absolute top-4 right-4 bg-white/20 hover:bg-white/30 backdrop-blur-md p-2 rounded-full text-white transition-all duration-200">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-            
-            <!-- 标题覆盖 -->
-            <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
-              <h2 class="text-2xl md:text-3xl font-bold text-white">
-                {{ selectedProduct.title }}
-              </h2>
-            </div>
-          </div>
-          
-          <!-- 内容区域 -->
-          <div class="flex-1 overflow-y-auto product-content">
-            <div class="p-6">
-              <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg mb-6">
-                <p class="text-gray-700 dark:text-gray-300" v-html="selectedProduct.introduction"></p>
-              </div>
-              
-              <div class="prose dark:prose-invert max-w-none mb-8" v-html="selectedProduct.detail"></div>
-              
-              <!-- 产品评论区 -->
-              <div class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-6">
-                <h3 class="text-xl font-bold mb-4 text-gray-800 dark:text-white">用户评论</h3>
-                <CommentList 
-                  target-type="product"
-                  :target-id="selectedProduct.pid"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- 无数据展示 -->
@@ -135,16 +80,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch, onUnmounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { getProductList } from '@/utils/api'
 import formatTime from '@/utils/formatTime'
 import Empty from '@/components/Empty.vue'
-import CommentList from '@/components/comment/CommentList.vue'
 
+const router = useRouter()
 const products = ref([])
 const loading = ref(true)
 const searchQuery = ref('')
-const selectedProduct = ref(null)
 
 // 获取产品列表
 const getProducts = async () => {
@@ -168,34 +113,13 @@ const filteredProducts = computed(() => {
   )
 })
 
-// 显示产品详情
-const showProductDetail = (product) => {
-  selectedProduct.value = product
-  // 禁用背景滚动
-  document.body.style.overflow = 'hidden'
+// 导航到产品详情页
+const navigateToDetail = (product) => {
+  router.push(`/product/${product.pid}`)
 }
 
-// 关闭产品详情
-const closeProductDetail = () => {
-  selectedProduct.value = null
-  // 恢复背景滚动
-  document.body.style.overflow = ''
-}
-
-// 监听弹窗关闭，确保恢复滚动
-watch(selectedProduct, (newVal) => {
-  if (!newVal) {
-    document.body.style.overflow = ''
-  }
-})
-
-// 组件卸载时确保恢复滚动
 onMounted(() => {
   getProducts()
-})
-
-onUnmounted(() => {
-  document.body.style.overflow = ''
 })
 </script>
 

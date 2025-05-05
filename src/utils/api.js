@@ -7,6 +7,7 @@ const getNewsTopList = () => request.get("/news/topList");
 
 // 产品相关API
 const getProductList = () => request.get("/product/list");
+const getProductDetail = (id) => request.get(`/product/detail/${id}`);
 
 // 用户相关API
 const login = (data) => request.post("/user/login", data);
@@ -49,6 +50,7 @@ export {
     getNewsDetail,
     getNewsTopList, 
     getProductList,
+    getProductDetail,
     login,
     register,
     getCommentList,
