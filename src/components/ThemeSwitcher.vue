@@ -1,29 +1,26 @@
 <template>
   <div class="dropdown dropdown-end">
-    <label tabindex="0" class="btn m-1 flex items-center">
+    <label tabindex="0" class="btn btn-ghost m-1 flex items-center">
       <span :key="currentTheme" class="theme-icon">{{ currentThemeIcon }}</span>
     </label>
-    <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+    <ul tabindex="0" class="dropdown-content menu p-2 shadow rounded-box w-52 border border-slate-200 dark:border-slate-700">
       <li>
         <button 
-          class="w-full text-left m-1" 
-          :class="{ 'bg-primary text-primary-content': currentTheme === 'light' }"
+          class="w-full text-left m-1 flex items-center" 
+          :class="{ 'bg-primary/10 text-primary': currentTheme === 'light' }"
           @click="changeTheme('light')"
-        >Light</button>
+        >
+          <span class="mr-2">☀️</span> 亮色模式
+        </button>
       </li>
       <li>
         <button 
-          class="w-full text-left m-1" 
-          :class="{ 'bg-primary text-primary-content': currentTheme === 'dark' }"
+          class="w-full text-left m-1 flex items-center" 
+          :class="{ 'bg-primary/10 text-primary': currentTheme === 'dark' }"
           @click="changeTheme('dark')"
-        >Dark</button>
-      </li>
-      <li>
-        <button 
-          class="w-full text-left m-1" 
-          :class="{ 'bg-primary text-primary-content': currentTheme === 'cupcake' }"
-          @click="changeTheme('cupcake')"
-        >Cupcake</button>
+        >
+          <span class="mr-2">🌙</span> 暗色模式
+        </button>
       </li>
     </ul>
   </div>
@@ -37,7 +34,6 @@ const currentTheme = ref('light');
 const themes = {
   light: '☀️',
   dark: '🌙',
-  cupcake: '🧁',
 };
 
 const currentThemeIcon = ref(themes[currentTheme.value]);
@@ -49,10 +45,21 @@ const changeTheme = (theme) => {
   currentTheme.value = theme;
   currentThemeIcon.value = themes[theme];
   
+  // 添加过渡类
   html.classList.add('theme-transition');
+  
+  // 设置主题
   html.setAttribute('data-theme', theme);
   localStorage.setItem('preferred-theme', theme);
   
+  // 同时处理暗黑模式类
+  if (theme === 'dark') {
+    html.classList.add('dark');
+  } else {
+    html.classList.remove('dark');
+  }
+  
+  // 移除过渡类
   setTimeout(() => {
     html.classList.remove('theme-transition');
   }, 500);
@@ -64,13 +71,30 @@ onMounted(() => {
     currentTheme.value = savedTheme;
     currentThemeIcon.value = themes[savedTheme];
     document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    // 同时处理暗黑模式类
+    if (savedTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
   }
+  
+  // 监听系统主题变化
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  mediaQuery.addEventListener('change', (e) => {
+    const newTheme = e.matches ? 'dark' : 'light';
+    // 仅在用户未手动设置主题时响应系统变化
+    if (!localStorage.getItem('preferred-theme')) {
+      changeTheme(newTheme);
+    }
+  });
 });
 </script>
 
 <style>
 :root {
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 .theme-transition {
@@ -79,6 +103,8 @@ onMounted(() => {
 
 .dropdown-content {
   z-index: 1000;
+  background-color: var(--card-bg) !important;
+  color: var(--text-color) !important;
 }
 
 .theme-icon {
@@ -95,5 +121,15 @@ onMounted(() => {
     opacity: 1;
     transform: scale(1) rotate(0deg);
   }
+}
+
+/* 主题选择器按钮样式 */
+.dropdown-content button {
+  color: var(--text-color);
+  transition: all 0.2s ease;
+}
+
+.dropdown-content button:hover {
+  background-color: var(--hover-bg);
 }
 </style>

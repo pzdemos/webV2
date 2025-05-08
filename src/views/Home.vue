@@ -1,5 +1,5 @@
 <template>
-  <div class="relative h-screen overflow-hidden bg-slate-900">
+  <div class="relative h-screen overflow-hidden hero-bg">
     <!-- 背景动画效果 -->
     <div class="absolute inset-0">
       <!-- 渐变背景 -->
@@ -40,7 +40,7 @@
       <div class="text-center space-y-12">
         <!-- 主标题 -->
         <div class="glass-card p-8 rounded-2xl hover:scale-105 transition-transform duration-300">
-          <span class="typing-title text-4xl md:text-5xl lg:text-6xl font-bold text-white border-r-2 pr-2 animate-blink">
+          <span class="typing-title text-4xl md:text-5xl lg:text-6xl font-bold main-title border-r-2 pr-2 animate-blink">
             {{ typingText }}
           </span>
         </div>
@@ -216,5 +216,43 @@ const startTypingAnimation = () => {
     transform: scale(1.5);
     opacity: 0.5;
   }
+}
+/* 主题响应式样式 */
+[data-theme="light"] .hero-bg {
+  background-color: #f8fafc;
+  background-image: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+}
+
+[data-theme="dark"] .hero-bg {
+  background-color: #0f172a;
+  background-image: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+[data-theme="light"] .glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 8px 32px 0 rgba(100, 116, 139, 0.1);
+}
+
+[data-theme="light"] .main-title {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 2px 10px rgba(99, 102, 241, 0.2);
+}
+
+[data-theme="dark"] .main-title {
+  color: white;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="light"] .animate-blink {
+  animation: blinkLight 1s step-end infinite;
+}
+
+@keyframes blinkLight {
+  0%, 100% { border-color: transparent; }
+  50% { border-color: #3b82f6; }
 }
 </style>

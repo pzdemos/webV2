@@ -5,25 +5,35 @@
       <h1 class="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
         产品展示
       </h1>
-      <p class="text-gray-600 dark:text-gray-400">
+      <p class="subtitle-text">
         创新科技，智慧生活
       </p>
     </div>
 
     <!-- 产品搜索栏 -->
-    <div class="max-w-2xl mx-auto mb-8">
-      <div class="relative">
+    <div class="max-w-2xl mx-auto mb-10">
+      <div class="relative search-container group">
         <input
           type="text"
           v-model="searchQuery"
           placeholder="搜索产品..."
-          class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700"
+          class="w-full px-5 py-3 rounded-xl border border-gray-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800/90 dark:border-gray-700 search-input backdrop-blur-sm transition-all duration-300 shadow-sm hover:shadow-md dark:text-gray-200 pl-12"
         />
-        <span class="absolute right-3 top-2.5">
-          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 transition-all duration-300 group-hover:text-blue-500 dark:group-hover:text-blue-400">
+          <svg class="w-6 h-6 text-gray-400 dark:text-gray-500 transition-transform duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </span>
+        <div class="absolute right-3 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" v-if="searchQuery">
+          <button
+            class="p-1.5 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-full text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-colors"
+            @click="searchQuery = ''"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -38,12 +48,12 @@
              class="product-card bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transition-all duration-300 transform hover:-translate-y-1">
           <!-- 产品图片 -->
           <div class="relative h-48 overflow-hidden group cursor-pointer" @click="navigateToDetail(product)">
-            <img 
+            <ImageLoader
               :src="getImageUrl(product.cover)" 
               :alt="product.title"
-              class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+              imageClass="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
             />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+            <div class="absolute inset-0 z-10 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
               <div class="p-4 w-full">
                 <p class="text-white text-sm font-medium">查看详情</p>
               </div>
@@ -86,6 +96,7 @@ import { getProductList } from '@/utils/api'
 import formatTime from '@/utils/formatTime'
 import { getImageUrl } from '@/utils/imageUrl';
 import Empty from '@/components/Empty.vue'
+import ImageLoader from '@/components/ImageLoader.vue'
 
 const router = useRouter()
 const products = ref([])
@@ -272,5 +283,52 @@ onMounted(() => {
 .dark .prose h3, 
 .dark .prose h4 {
   color: white;
+}
+/* 搜索框样式 */
+.search-input {
+  transition: all 0.3s ease;
+}
+
+.search-container:hover .search-input {
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+}
+
+.search-input:focus {
+  border-color: rgba(59, 130, 246, 0.8);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+[data-theme="light"] .search-input {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-color: #e2e8f0;
+  color: #334155;
+}
+
+[data-theme="light"] .search-input::placeholder {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .search-input {
+  background-color: rgba(31, 41, 55, 0.8);
+  border-color: #374151;
+}
+
+[data-theme="dark"] .search-input:focus {
+  border-color: rgba(59, 130, 246, 0.6);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+[data-theme="light"] .subtitle-text {
+  color: #64748b;
+}
+
+[data-theme="dark"] .subtitle-text {
+  color: #94a3b8;
+}
+
+/* 添加搜索框点击效果 */
+.search-container:active .search-input {
+  transform: scale(0.98);
 }
 </style>

@@ -1,10 +1,12 @@
 <template>
   <div class="container mx-auto p-2">
     <!-- 新闻头部 -->
-    <div
-      class="news-header h-64 md:h-96 bg-cover bg-center rounded-lg shadow-lg"
-      :style="{ backgroundImage: `url('${newsBgImage}')` }"
-    >
+    <div class="news-header h-64 md:h-96 rounded-lg shadow-lg relative overflow-hidden">
+      <ImageLoader
+        :src="newsBgImage"
+        alt="News Background"
+        imageClass="w-full h-full object-cover"
+      />
       <!-- 可添加标题或其他内容 -->
     </div>
 
@@ -16,19 +18,19 @@
             type="text"
             v-model="searchText"
             placeholder="请输入新闻关键词"
-            class="input input-bordered w-full pr-12 focus:outline-none focus:border-primary rounded"
+            class="input w-full pr-12 pl-5 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-xl border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm transition-all duration-300 shadow-sm hover:shadow-md dark:text-gray-200"
             @keyup.enter="goNewsDetail(firstID)"
             @input="visible=true"
             @blur="handleBlur"
           />
           <button
-            class="absolute right-3 top-1/2 transform -translate-y-1/2 p-2 hover:bg-gray-200 rounded transition-colors"
+            class="absolute right-3 top-1/2 transform -translate-y-1/2 p-2 hover:bg-blue-50 dark:hover:bg-gray-700 rounded-full transition-all duration-300 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400"
             @click="visible=true"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="transition-transform duration-300 transform group-hover:scale-110">
               <path
                 d="M21 21L15 15"
-                stroke="#000"
+                stroke="currentColor"
                 stroke-width="2"
                 stroke-linecap="round"
               />
@@ -36,7 +38,7 @@
                 cx="11"
                 cy="11"
                 r="8"
-                stroke="#000"
+                stroke="currentColor"
                 stroke-width="2"
               />
             </svg>
@@ -46,12 +48,12 @@
 
       <!-- 搜索结果下拉框 -->
       <div v-if="visible" class="relative w-full max-w-2xl mx-auto mt-2">
-        <div class="absolute bg-white dark:bg-gray-800 w-full z-10 rounded-lg shadow-lg">
+        <div class="absolute bg-white/95 dark:bg-gray-800/95 backdrop-blur-md w-full z-10 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 transition-all duration-300 animate-fadeIn">
           <div v-if="searchNewsList.length" class="max-h-80 overflow-y-auto">
             <div
               v-for="item in searchNewsList"
               :key="item.nid"
-              class="p-4 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer border-b last:border-b-0"
+              class="p-4 hover:bg-blue-50/70 dark:hover:bg-gray-700/70 cursor-pointer border-b border-gray-100 dark:border-gray-700 last:border-b-0 transition-colors duration-300 flex items-center"
               @click="goNewsDetail(item.nid)"
             >
               {{ item.title }}
@@ -69,16 +71,17 @@
       <div
         v-for="item in topNewsList"
         :key="item.nid"
-        class="card bg-base-100 shadow-md hover:shadow-xl transition-shadow rounded-lg cursor-pointer"
+        class="card bg-base-100 shadow-md hover:shadow-xl transition-shadow rounded-lg cursor-pointer news-card border border-gray-700/30 hover:border-blue-500/30 overflow-hidden"
         @click="goNewsDetail(item.nid)"
       >
-        <figure class="h-40 overflow-hidden rounded-t-lg">
-          <img
+        <div class="h-40 w-full relative group overflow-hidden p-0 m-0">
+          <ImageLoader
             :src="getImageUrl(item.cover)"
             alt="News Image"
-            class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300"
+            imageClass="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
+            style="display: block; margin: 0; padding: 0;"
           />
-        </figure>
+        </div>
         <div class="card-body p-4">
           <h2 class="card-title text-lg font-semibold light:text-black dark:text-primary-light">
             {{ item.title }}
@@ -120,14 +123,17 @@
               <!-- 新闻列表 -->
               <div v-for="item in tabNews[activeName]" :key="item.nid">
                 <div
-                  class="card bg-base-100 shadow-md hover:shadow-lg transition-shadow rounded-lg p-4 flex flex-col md:flex-row"
+                  class="border border-gray-700/30 mb-4 rounded-lg p-4 cursor-pointer hover:bg-gray-100/10 hover:border-blue-500/30 flex items-center space-x-4 transition-all duration-300"
                   @click="goNewsDetail(item.nid)"
                 >
-                  <img
-                    :src="getImageUrl(item.cover)"
-                    alt="News Image"
-                    class="w-full md:w-32 h-24 object-cover rounded-lg mb-4 md:mb-0 md:mr-4 flex-shrink-0"
-                  />
+                  <div class="w-full md:w-32 h-24 rounded-lg mb-4 md:mb-0 md:mr-4 flex-shrink-0 overflow-hidden p-0 m-0">
+                    <ImageLoader
+                      :src="getImageUrl(item.cover)"
+                      alt="News Image"
+                      imageClass="w-full h-full object-cover"
+                      style="display: block; margin: 0; padding: 0;"
+                    />
+                  </div>
                   <div>
                     <h3 class="text-lg font-semibold light:text-black dark:text-primary-light mb-2">
                       {{ item.title }}
@@ -190,6 +196,7 @@ import { ref, onMounted, computed } from "vue";
 import { getNewsList, getWebsiteConfigs } from "@/utils/api";
 import formatTime from "@/utils/formatTime";
 import { useRouter } from "vue-router";
+import ImageLoader from "@/components/ImageLoader.vue";
 import Empty from "@/components/Empty.vue";
 import _ from "lodash";
 import { getImageUrl } from '@/utils/imageUrl';
@@ -339,10 +346,30 @@ const scrollToTop = () => {
 /* 顶部新闻卡片 */
 .top-news .card img {
   transition: transform 0.3s;
+  display: block;
+  margin: 0;
+  padding: 0;
 }
 
 .top-news .card:hover img {
   transform: scale(1.05);
+}
+
+/* 确保图片容器没有内部间距，紧贴边框 */
+.news-card > div:first-child,
+.overflow-hidden {
+  padding: 0;
+  margin: 0;
+  line-height: 0;
+}
+
+/* 确保所有图片组件内的图片没有默认间距 */
+.news-card img,
+.overflow-hidden img {
+  display: block;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
 }
 
 /* 分类标签容器 */
@@ -443,6 +470,22 @@ button.fixed:hover {
   }
 }
 
+/* 搜索结果淡入动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
 /* 移除原有的箭头文本 */
 button.fixed span {
   display: none;
@@ -526,6 +569,34 @@ button.fixed span {
   }
 
   /* 调整分类标签的布局 */
+
+
+
+
+  ul.news-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin: 0;
+}
+
+/* 确保图片容器没有内部间距，紧贴边框 */
+.news-card > div:first-child,
+.overflow-hidden {
+  padding: 0;
+  margin: 0;
+  line-height: 0;
+}
+
+/* 确保ImageLoader组件内的图片没有默认间距 */
+.news-card img,
+.overflow-hidden img {
+  display: block;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+}
+
   ul {
     display: flex;
     justify-content: center;

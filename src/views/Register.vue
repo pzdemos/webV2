@@ -22,14 +22,17 @@
                   id="username" 
                   v-model="username" 
                   type="text"
-                  :class="{'border-red-500 ring-1 ring-red-500': usernameError,
-                          'focus:border-indigo-500 focus:ring-indigo-500': !usernameError}"
+                  :class="{
+                    'border-red-500 ring-1 ring-red-500': usernameError,
+                    'focus:border-blue-500 focus:ring-blue-500': !usernameError,
+                    'bg-blue-50 dark:bg-blue-900/20': username && !usernameError
+                  }"
                   class="w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 dark:bg-gray-700 dark:text-white transition-all duration-200"
                   placeholder="输入您的用户名"
                 />
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <div class="p-1.5 rounded-lg bg-gray-100 dark:bg-gray-600 group-focus-within:bg-indigo-100 dark:group-focus-within:bg-indigo-900 transition-colors duration-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 dark:text-gray-400 group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400" viewBox="0 0 20 20" fill="currentColor">
+                  <div class="p-1.5 rounded-lg bg-gray-100 dark:bg-gray-600 group-focus-within:bg-blue-100 dark:group-focus-within:bg-blue-900 transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 dark:text-gray-400 group-focus-within:text-blue-600 dark:group-focus-within:text-blue-400" viewBox="0 0 20 20" fill="currentColor">
                       <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                     </svg>
                   </div>
@@ -51,15 +54,18 @@
                   id="password" 
                   v-model="password" 
                   :type="showPassword ? 'text' : 'password'"
-                  :class="{'border-red-500 ring-1 ring-red-500': passwordError,
-                          'focus:border-indigo-500 focus:ring-indigo-500': !passwordError}"
+                  :class="{
+                    'border-red-500 ring-1 ring-red-500': passwordError,
+                    'focus:border-blue-500 focus:ring-blue-500': !passwordError,
+                    'bg-blue-50 dark:bg-blue-900/20': password && !passwordError
+                  }"
                   class="w-full pl-12 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 dark:bg-gray-700 dark:text-white transition-all duration-200"
                   placeholder="创建一个安全的密码"
                   @input="checkPasswordStrength"
                 />
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <div class="p-1.5 rounded-lg bg-gray-100 dark:bg-gray-600 group-focus-within:bg-indigo-100 dark:group-focus-within:bg-indigo-900 transition-colors duration-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 dark:text-gray-400 group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400" viewBox="0 0 20 20" fill="currentColor">
+                  <div class="p-1.5 rounded-lg bg-gray-100 dark:bg-gray-600 group-focus-within:bg-blue-100 dark:group-focus-within:bg-blue-900 transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 dark:text-gray-400 group-focus-within:text-blue-600 dark:group-focus-within:text-blue-400" viewBox="0 0 20 20" fill="currentColor">
                       <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
                     </svg>
                   </div>
@@ -142,14 +148,17 @@
                   id="confirmPassword" 
                   v-model="confirmPassword" 
                   :type="showConfirmPassword ? 'text' : 'password'"
-                  :class="{'border-red-500 ring-1 ring-red-500': confirmPasswordError,
-                          'focus:border-indigo-500 focus:ring-indigo-500': !confirmPasswordError}"
+                  :class="{
+                    'border-red-500 ring-1 ring-red-500': confirmPasswordError,
+                    'focus:border-blue-500 focus:ring-blue-500': !confirmPasswordError,
+                    'bg-blue-50 dark:bg-blue-900/20': confirmPassword && !confirmPasswordError
+                  }"
                   class="w-full pl-12 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 dark:bg-gray-700 dark:text-white transition-all duration-200"
                   placeholder="重复输入您的密码"
                 />
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <div class="p-1.5 rounded-lg bg-gray-100 dark:bg-gray-600 group-focus-within:bg-indigo-100 dark:group-focus-within:bg-indigo-900 transition-colors duration-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 dark:text-gray-400 group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400" viewBox="0 0 20 20" fill="currentColor">
+                  <div class="p-1.5 rounded-lg bg-gray-100 dark:bg-gray-600 group-focus-within:bg-blue-100 dark:group-focus-within:bg-blue-900 transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 dark:text-gray-400 group-focus-within:text-blue-600 dark:group-focus-within:text-blue-400" viewBox="0 0 20 20" fill="currentColor">
                       <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
                     </svg>
                   </div>

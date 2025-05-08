@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar fixed top-0 left-0 right-0 z-50 bg-slate-900/80 backdrop-blur-lg border-b border-white/10">
+  <div class="navbar fixed top-0 left-0 right-0 z-50 backdrop-blur-lg nav-bg border-b">
     <!-- 品牌名称 -->
     <div class="flex-1">
       <a class="btn btn-ghost font-serif text-xl md:text-2xl group">
@@ -13,27 +13,27 @@
     <!-- 移动端汉堡菜单 -->
     <div class="flex-none md:hidden">
       <div class="dropdown dropdown-end">
-        <label tabindex="0" class="btn btn-ghost text-gray-200 hover:bg-white/10">
+        <label tabindex="0" class="btn btn-ghost nav-text hover:bg-white/10">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </label>
-        <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-lg bg-slate-900/95 backdrop-blur rounded-box w-52 border border-white/10">
+        <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-lg nav-dropdown backdrop-blur rounded-box w-52 border">
           <li v-for="(item, index) in filteredMenuItems" :key="index">
             <template v-if="item.external">
-              <a :href="item.path" target="_blank" rel="noopener noreferrer" class="text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300">
+              <a :href="item.path" target="_blank" rel="noopener noreferrer" class="nav-text hover:bg-white/10 rounded-lg transition-all duration-300">
                 {{ item.name }}
               </a>
             </template>
             <template v-else>
-              <router-link :to="item.path" active-class="active" class="text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300">
+              <router-link :to="item.path" active-class="active" class="nav-text hover:bg-white/10 rounded-lg transition-all duration-300">
                 {{ item.name }}
               </router-link>
             </template>
           </li>
           <!-- 登出按钮（仅在登录状态下显示） -->
           <li v-if="userStore.isLoggedIn()">
-            <a @click="handleLogout" class="text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300">
+            <a @click="handleLogout" class="nav-text hover:bg-white/10 rounded-lg transition-all duration-300">
               登出
             </a>
           </li>
@@ -46,12 +46,12 @@
       <ul class="menu menu-horizontal px-1 gap-2">
         <li v-for="(item, index) in filteredMenuItems" :key="index" class="menu-item-wrapper">
           <template v-if="item.external">
-            <a :href="item.path" target="_blank" rel="noopener noreferrer" class="nav-link text-gray-300 hover:text-white transition-all duration-300">
+            <a :href="item.path" target="_blank" rel="noopener noreferrer" class="nav-link nav-text transition-all duration-300">
               {{ item.name }}
             </a>
           </template>
           <template v-else>
-            <router-link :to="item.path" active-class="active" class="nav-link text-gray-300 hover:text-white transition-all duration-300">
+            <router-link :to="item.path" active-class="active" class="nav-link nav-text transition-all duration-300">
               {{ item.name }}
             </router-link>
           </template>
@@ -66,14 +66,14 @@
           <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">
             {{ userStore.username.charAt(0).toUpperCase() }}
           </div>
-          <span class="hidden md:inline text-gray-300">{{ userStore.username }}</span>
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <span class="hidden md:inline nav-text">{{ userStore.username }}</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 nav-text opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
         </label>
-        <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-lg bg-slate-900/95 backdrop-blur rounded-box w-52 border border-white/10">
+        <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-lg nav-dropdown backdrop-blur rounded-box w-52 border">
           <li>
-            <a @click="handleLogout" class="text-gray-300 hover:text-white">
+            <a @click="handleLogout" class="nav-text">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
               </svg>
@@ -91,8 +91,6 @@
       </router-link>
     </div>
 
-    <!-- 主题切换器 -->
-    <ThemeSwitcher class="ml-4" />
 
     <!-- 装饰元素 -->
     <div class="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
@@ -102,7 +100,7 @@
 <script setup>
 import { computed, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import ThemeSwitcher from "@/components/ThemeSwitcher.vue";
+
 import { useUserStore } from '@/stores/user';
 import { getWebsiteConfigs } from "@/utils/api";
 
@@ -206,4 +204,24 @@ onMounted(async () => {
 .navbar {
   animation: glow 3s infinite;
 }
+
+/* 暗色主题样式 */
+.nav-bg {
+  background-color: rgba(15, 23, 42, 0.8);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-text {
+  color: #e2e8f0;
+}
+
+.nav-text:hover {
+  color: #ffffff;
+}
+
+.nav-dropdown {
+  background-color: rgba(15, 23, 42, 0.95);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
 </style>

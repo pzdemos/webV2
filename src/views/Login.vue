@@ -22,8 +22,11 @@
                   id="username" 
                   v-model="username" 
                   type="text"
-                  :class="{'border-red-500 ring-1 ring-red-500': usernameError,
-                          'focus:border-blue-500 focus:ring-blue-500': !usernameError}"
+                  :class="{
+                    'border-red-500 ring-1 ring-red-500': usernameError,
+                    'focus:border-blue-500 focus:ring-blue-500': !usernameError,
+                    'bg-blue-50 dark:bg-blue-900/20': username && !usernameError
+                  }"
                   class="w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 dark:bg-gray-700 dark:text-white transition-all duration-200"
                   placeholder="输入您的用户名"
                 />
@@ -51,8 +54,11 @@
                   id="password" 
                   v-model="password" 
                   :type="showPassword ? 'text' : 'password'"
-                  :class="{'border-red-500 ring-1 ring-red-500': passwordError,
-                          'focus:border-blue-500 focus:ring-blue-500': !passwordError}"
+                  :class="{
+                    'border-red-500 ring-1 ring-red-500': passwordError,
+                    'focus:border-blue-500 focus:ring-blue-500': !passwordError,
+                    'bg-blue-50 dark:bg-blue-900/20': password && !passwordError
+                  }"
                   class="w-full pl-12 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 dark:bg-gray-700 dark:text-white transition-all duration-200"
                   placeholder="输入您的密码"
                 />

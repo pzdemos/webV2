@@ -1,8 +1,8 @@
 <template>
     <div class="mt-16">
   <!-- 页面头部 -->
-  <div class="flex items-center p-5">
-    <button @click="handleBack" class="mr-4 hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded-full transition-all">
+  <div class="flex items-center p-5 bg-transparent">
+    <button @click="handleBack" class="mr-4 hover:bg-opacity-80 p-2 rounded-full transition-all btn-back">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         class="w-6 h-6 prose dark:prose-dark"
@@ -15,28 +15,31 @@
     </button>
   </div>
 
-  <div class="flex flex-col lg:flex-row mt-4 px-4 lg:px-8 space-y-6 lg:space-y-0 lg:space-x-8">
+  <div class="flex flex-col lg:flex-row mt-4 px-4 lg:px-8 space-y-6 lg:space-y-0 lg:space-x-8 bg-transparent">
     <!-- 主内容区域 -->
     <div class="lg:w-1/2 w-full">
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+      <div class="card rounded-xl overflow-hidden news-card">
         <div class="p-6">
-          <h2 class="text-2xl font-bold mb-2 prose dark:prose-dark">{{ currentNews.title }}</h2>
-          <div class="text-sm text-gray-500 dark:text-gray-400 mb-4 flex items-center">
+          <h2 class="text-2xl font-bold mb-2 prose">{{ currentNews.title }}</h2>
+          <div class="text-sm mb-4 flex items-center opacity-80">
             <span class="mr-4">{{ formatTime.getTimeDetail(currentNews.update_time) }}</span>
-            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
+            <span class="category-tag text-xs font-medium px-2.5 py-0.5 rounded">
               {{ getCategoryName(currentNews.category) }}
             </span>
           </div>
-          <div class="divider mb-4">
+          <div class="divider mb-4 opacity-60">
             <Star class="inline-block w-5 h-5 text-yellow-500" />
           </div>
           <div class="mb-6">
-            <div
-              class="w-full h-64 bg-cover bg-center rounded-lg shadow-md"
-              :style="{ backgroundImage: `url(http://121.43.33.235:5210${currentNews.cover})` }"
-            ></div>
+            <div class="w-full h-64 rounded-lg overflow-hidden news-image-container">
+              <ImageLoader
+                :src="imageUrl.getImageUrl(currentNews.cover)"
+                :alt="currentNews.title"
+                imageClass="w-full h-full object-cover"
+              />
+            </div>
           </div>
-          <div class="prose dark:prose-dark max-w-none" v-html="'&nbsp;' + currentNews.content"></div>
+          <div class="prose max-w-none" v-html="'&nbsp;' + currentNews.content"></div>
         </div>
       </div>
     </div>
@@ -44,22 +47,22 @@
     <!-- 右侧边栏 -->
     <div class="lg:w-1/2 w-full space-y-6">
       <!-- 最近新闻 (置于上方) -->
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+      <div class="card rounded-xl overflow-hidden news-card">
         <div class="p-6">
-          <h3 class="text-xl font-bold mb-4 prose dark:prose-dark border-b border-gray-200 dark:border-gray-700 pb-3">最近新闻</h3>
+          <h3 class="text-xl font-bold mb-4 prose border-b border-gray-200 pb-3">最近新闻</h3>
           <ul class="space-y-3">
             <li
               v-for="(data, index) in topNews"
               :key="data.nid"
               @click="handleChange(data.nid)"
-              class="p-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer rounded-lg transition-colors duration-200 border border-transparent hover:border-gray-200 dark:hover:border-gray-600"
+              class="p-3 cursor-pointer rounded-lg transition-colors duration-200 border border-transparent news-item"
             >
               <div class="flex flex-col">
                 <span class="flex items-center mb-1 font-medium">
                   <span v-if="index === 0" class="mr-2 text-yellow-500">🔝</span>
                   <span>{{ index !== 0 ? index : '' }} {{ data.title }}</span>
                 </span>
-                <span class="text-sm text-gray-500 dark:text-gray-400">
+                <span class="text-sm opacity-80">
                   {{ formatTime.getTimeDetail(data.updateTime) }}
                 </span>
               </div>
@@ -69,9 +72,9 @@
       </div>
       
       <!-- 评论区域 (置于下方) -->
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+      <div class="card rounded-xl overflow-hidden news-card">
         <div class="p-6">
-          <h3 class="text-xl font-bold mb-4 prose dark:prose-dark border-b border-gray-200 dark:border-gray-700 pb-3">用户评论</h3>
+          <h3 class="text-xl font-bold mb-4 prose border-b border-gray-200 pb-3">用户评论</h3>
           <div class="comments-container h-96 overflow-y-auto pr-2 relative" ref="commentsContainer">
             <CommentList 
               v-if="currentNews.nid"
@@ -83,7 +86,7 @@
             <button 
               v-show="showScrollTop" 
               @click="scrollToTop"
-              class="scroll-top-btn fixed bottom-4 right-4 bg-blue-500 hover:bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-lg transition-all duration-300 transform hover:scale-110 focus:outline-none z-10"
+              class="scroll-top-btn fixed bottom-4 right-4 rounded-full w-10 h-10 flex items-center justify-center shadow-lg transition-all duration-300 transform hover:scale-110 focus:outline-none z-10"
             >
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
@@ -104,6 +107,8 @@ import formatTime from "@/utils/formatTime";
 import { getNewsDetail, getNewsTopList } from "@/utils/api";
 import Star from "@/components/Star.vue";
 import CommentList from "@/components/comment/CommentList.vue";
+import imageUrl from "@/utils/imageUrl";
+import ImageLoader from "@/components/ImageLoader.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -174,7 +179,7 @@ const handleChange = (id) => {
 
 <style scoped>
 .divider {
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--border-color, #e5e7eb);
   margin: 1rem 0;
 }
 
@@ -182,15 +187,15 @@ const handleChange = (id) => {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* 深色模式适配 */
-:deep(.dark .prose) {
+/* 暗色主题样式 */
+:deep(.prose) {
   color: #e5e7eb;
 }
 
-:deep(.dark .prose h1), 
-:deep(.dark .prose h2), 
-:deep(.dark .prose h3), 
-:deep(.dark .prose h4) {
+:deep(.prose h1), 
+:deep(.prose h2), 
+:deep(.prose h3), 
+:deep(.prose h4) {
   color: white;
 }
 
@@ -216,4 +221,65 @@ const handleChange = (id) => {
 .comments-container::-webkit-scrollbar-thumb:hover {
   background-color: rgba(156, 163, 175, 0.8);
 }
+
+/* 暗色模式卡片样式 */
+.news-card {
+  border-radius: 1rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.news-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.news-item {
+  transition: all 0.2s ease-in-out;
+  background-color: rgba(30, 41, 59, 0.7);
+  border: 1px solid transparent;
+}
+
+.news-item:hover {
+  background-color: rgba(30, 58, 138, 0.3);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn-back {
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+  background-color: rgba(30, 41, 59, 0.7);
+  color: #e5e7eb;
+}
+
+.btn-back:hover {
+  background-color: rgba(59, 130, 246, 0.3);
+  transform: scale(1.05);
+}
+
+.category-tag {
+  transition: all 0.2s ease;
+  background-color: rgba(59, 130, 246, 0.3);
+  color: #93c5fd;
+}
+
+.news-image {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.news-image:hover {
+  transform: scale(1.01);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.scroll-top-btn {
+  background-color: #3b82f6;
+  color: white;
+}
+
+
 </style>

@@ -18,13 +18,13 @@
 
       <!-- 产品头部信息 -->
       <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-8">
-        <div class="relative h-72 md:h-96 bg-gray-100 dark:bg-gray-900">
-          <img 
+        <div class="relative h-72 md:h-96 bg-gray-900">
+          <ImageLoader 
             :src="getImageUrl(product.cover)" 
             :alt="product.title"
-            class="w-full h-full object-cover"
+            imageClass="w-full h-full object-cover"
           />
-          <div class="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent"></div>
+          <div class="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent z-10"></div>
           
           <!-- 标题覆盖 -->
           <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
@@ -110,6 +110,7 @@ import formatTime from '@/utils/formatTime'
 import { getImageUrl } from '@/utils/imageUrl';
 import Empty from '@/components/Empty.vue'
 import CommentList from '@/components/comment/CommentList.vue'
+import ImageLoader from '@/components/ImageLoader.vue'
 
 const route = useRoute()
 const router = useRouter()

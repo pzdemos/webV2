@@ -1,9 +1,9 @@
 <template>
   <div 
-    class="border-b border-gray-100 dark:border-gray-700 py-3 px-2 rounded-xl transition-all duration-300 hover:bg-blue-50/50 dark:hover:bg-blue-900/10 relative overflow-hidden group"
+    class="border-b border-gray-700 py-3 px-2 rounded-xl transition-all duration-300 hover:bg-blue-900/10 relative overflow-hidden group"
   >
     <!-- 波浪效果背景 -->
-    <div class="absolute inset-0 bg-gradient-to-r from-blue-100/0 via-blue-100/0 to-blue-100/0 dark:from-blue-900/0 dark:via-blue-900/0 dark:to-blue-900/0 group-hover:from-blue-100/30 group-hover:via-blue-100/10 group-hover:to-blue-100/0 dark:group-hover:from-blue-900/20 dark:group-hover:via-blue-900/10 dark:group-hover:to-blue-900/0 transition-all duration-700"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-blue-900/0 via-blue-900/0 to-blue-900/0 group-hover:from-blue-900/20 group-hover:via-blue-900/10 group-hover:to-blue-900/0 transition-all duration-700"></div>
     
     <div class="flex space-x-3 relative">
       <!-- 用户头像 - 使用首字母 -->
@@ -19,13 +19,13 @@
       <!-- 评论内容 -->
       <div class="flex-1 min-w-0">
         <div class="flex items-center justify-between mb-1">
-          <p class="font-medium text-gray-900 dark:text-white flex items-center">
+          <p class="font-medium text-white flex items-center">
             {{ comment.user ? comment.user.username : '匿名用户' }}
-            <span class="inline-block ml-2 text-xs px-2 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full">用户</span>
+            <span class="inline-block ml-2 text-xs px-2 py-0.5 bg-blue-900/30 text-blue-300 rounded-full">用户</span>
           </p>
           <div class="flex items-center space-x-1">
             <!-- 时间气泡 -->
-            <div class="time-bubble text-xs text-gray-500 dark:text-gray-400 px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200">
+            <div class="time-bubble text-xs text-gray-400 px-2 py-0.5 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors duration-200">
               <time>{{ formatTime(comment.createdAt) }}</time>
             </div>
             
@@ -33,7 +33,7 @@
             <button 
               v-if="canDelete" 
               @click="handleDelete"
-              class="text-red-500 hover:text-red-700 hover:bg-red-100 dark:hover:bg-red-900/30 transition-all duration-200 text-sm p-1.5 rounded-full transform hover:rotate-12"
+              class="text-red-500 hover:text-red-400 hover:bg-red-900/30 transition-all duration-200 text-sm p-1.5 rounded-full transform hover:rotate-12"
               :disabled="loading"
             >
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -43,9 +43,9 @@
           </div>
         </div>
         
-        <div class="comment-content mt-2 text-gray-800 dark:text-gray-200 break-words whitespace-pre-line bg-white dark:bg-gray-800/50 p-3 rounded-lg shadow-sm relative overflow-hidden">
+        <div class="comment-content mt-2 text-gray-200 break-words whitespace-pre-line bg-gray-800/50 p-3 rounded-lg shadow-sm border border-gray-700 relative overflow-hidden">
           <!-- 装饰性的引号图标 -->
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-100 dark:text-gray-700 absolute -top-1 -left-1 transform -rotate-6 opacity-80" fill="currentColor" viewBox="0 0 24 24">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-700 absolute -top-1 -left-1 transform -rotate-6 opacity-80" fill="currentColor" viewBox="0 0 24 24">
             <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
           </svg>
           <!-- 实际评论内容 -->
@@ -54,7 +54,7 @@
         
         <!-- 交互区域 -->
         <div class="flex items-center justify-end mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <button class="text-gray-400 hover:text-blue-500 dark:text-gray-500 dark:hover:text-blue-400 p-1 text-xs flex items-center space-x-1 transition-colors duration-200">
+          <button class="text-gray-500 hover:text-blue-400 p-1 text-xs flex items-center space-x-1 transition-colors duration-200">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
             </svg>
@@ -195,9 +195,11 @@ const handleDelete = async () => {
 }
 
 .comment-content:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   transform: translateY(-1px);
 }
+
+
 
 .time-bubble {
   position: relative;

@@ -5,9 +5,14 @@ import './style.css'
 import App from './App.vue'
 import router from './router'
 import './assets/index.css'
+import './assets/theme.css'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import { getWebsiteConfigs } from './utils/api'
+
+// 强制使用暗色主题
+document.documentElement.setAttribute('data-theme', 'dark')
+document.documentElement.classList.add('dark')
 
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
