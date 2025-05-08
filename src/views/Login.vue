@@ -133,9 +133,12 @@
               </div>
             </div> -->
             
+            
+            
             <!-- 登录按钮 -->
             <button 
-              type="submit" 
+              type="button" 
+              @click="validateAndLogin"
               class="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0"
               :disabled="userStore.loading"
             >
@@ -278,15 +281,19 @@ const handleLoginSuccess = (result) => {
 
 // 登录方法
 const validateAndLogin = async () => {
-  if (validateForm()) {
-    const result = await userStore.userLogin({
-      username: username.value,
-      password: password.value,
-      rememberMe: rememberMe.value
-    });
-    
-    handleLoginSuccess(result);
+  // 表单验证
+  if (!validateForm()) {
+    return;
   }
+  
+  // 直接登录
+  const result = await userStore.userLogin({
+    username: username.value,
+    password: password.value,
+    rememberMe: rememberMe.value
+  });
+  
+  handleLoginSuccess(result);
 };
 
 // 忘记密码功能

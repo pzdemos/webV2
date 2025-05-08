@@ -203,9 +203,24 @@
                </div>
              </div> -->
             
+            <!-- 如果已验证，显示验证通过提示 -->
+            <!-- <div v-if="isCaptchaVerified" class="mt-6 mb-6 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-green-500" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              <span class="text-green-600 dark:text-green-400">人机验证已通过</span>
+            </div> -->
+            
+            <!-- 人机验证弹窗 -->
+            <CaptchaModal
+              v-model="showCaptchaModal"
+              @verified="handleCaptchaVerified"
+            />
+            
             <!-- 注册按钮 -->
             <button 
-              type="submit" 
+              type="button" 
+              @click="validateAndRegister"
               class="w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0"
               :disabled="userStore.loading"
             >
@@ -249,6 +264,8 @@
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router'; 
 import { useUserStore } from '@/stores/user';
+import { ElMessage } from 'element-plus';
+import CaptchaModal from '@/components/CaptchaModal.vue';
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -262,6 +279,8 @@ const usernameError = ref('');
 const passwordError = ref('');
 const confirmPasswordError = ref('');
 const passwordStrength = ref(0);
+const isCaptchaVerified = ref(false);
+const showCaptchaModal = ref(false);
 
 // 密码强度相关计算属性
 const strengthText = computed(() => {
@@ -349,16 +368,49 @@ const validateForm = () => {
   return isValid;
 };
 
+// 存储验证结果
+const registerResult = ref(null);
+
+// 人机验证成功处理
+const handleCaptchaVerified = () => {
+  isCaptchaVerified.value = true;
+  // 验证成功后直接完成注册并跳转
+  if (registerResult.value && registerResult.value.success) {
+    setTimeout(() => {
+      router.push('/login');
+    }, 1000);
+  }
+};
+
+// 注册方法
 const validateAndRegister = async () => {
-  if (validateForm()) {
-    const result = await userStore.userRegister({
+  // 表单验证
+  if (!validateForm()) {
+    return;
+  }
+  
+  try {
+    // 先发送注册请求
+    // 发送注册请求
+    registerResult.value = await userStore.userRegister({
       username: username.value,
       password: password.value
     });
     
-    if (result.success) {
-      router.push('/login');
+    // 如果请求成功，显示人机验证弹窗
+    if (registerResult.value.success) {
+      // 显示人机验证弹窗
+      showCaptchaModal.value = true;
     }
+  } catch (error) {
+    ElMessage({
+      type: 'error',
+      message: '账号验证失败，请重试',
+      duration: 2000
+    });
+    console.error('注册请求错误:', error);
+    // 确保出错时重置加载状态
+    userStore.$reset();
   }
 };
 </script>

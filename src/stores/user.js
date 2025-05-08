@@ -14,6 +14,7 @@ export const useUserStore = defineStore('user', () => {
   
   // 登录
   const userLogin = async (userData) => {
+    // 确保设置加载状态
     loading.value = true
     error.value = null
     
@@ -52,18 +53,21 @@ export const useUserStore = defineStore('user', () => {
       ElMessage.error(message) // 使用ElMessage直接显示错误
       return { success: false, message }
     } finally {
-      loading.value = false
+      // 确保在处理完毕后重置加载状态
+      setTimeout(() => {
+        loading.value = false
+      }, 0)
     }
   }
   
   // 注册
   const userRegister = async (userData) => {
+    // 确保设置加载状态
     loading.value = true
     error.value = null
     
     try {
       const res = await register(userData)
-      ElMessage.success('注册成功！正在跳转到登录页面...')
       return { success: true }
     } catch (err) {
       const message = err.response?.data?.message || '注册失败，请稍后再试'
@@ -71,7 +75,10 @@ export const useUserStore = defineStore('user', () => {
       ElMessage.error(message) // 使用ElMessage直接显示错误
       return { success: false, message }
     } finally {
-      loading.value = false
+      // 确保在处理完毕后重置加载状态
+      setTimeout(() => {
+        loading.value = false
+      }, 0)
     }
   }
   
