@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useUserStore } from "@/stores/user";
 const request = axios.create({
-  baseURL: "http://localhost:5200/api/v1/web",
+  baseURL: "/api/v1/web",
 });
 
 request.interceptors.request.use(

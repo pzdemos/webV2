@@ -20,7 +20,7 @@
       <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-8">
         <div class="relative h-72 md:h-96 bg-gray-100 dark:bg-gray-900">
           <img 
-            :src="`http://localhost:5200${product.cover}`" 
+            :src="getImageUrl(product.cover)" 
             :alt="product.title"
             class="w-full h-full object-cover"
           />
@@ -107,6 +107,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getProductDetail } from '@/utils/api'
 import formatTime from '@/utils/formatTime'
+import { getImageUrl } from '@/utils/imageUrl';
 import Empty from '@/components/Empty.vue'
 import CommentList from '@/components/comment/CommentList.vue'
 

@@ -10,6 +10,11 @@ export default defineConfig({
     },
   },
   server: {
-    proxy: { }
+    proxy: {
+      '/api/v1/web': {
+        target: 'http://121.43.33.235:5210',
+        changeOrigin: true
+      }
+    }
   }
 })

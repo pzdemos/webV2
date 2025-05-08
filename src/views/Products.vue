@@ -39,7 +39,7 @@
           <!-- 产品图片 -->
           <div class="relative h-48 overflow-hidden group cursor-pointer" @click="navigateToDetail(product)">
             <img 
-              :src="`http://localhost:5200${product.cover}`" 
+              :src="getImageUrl(product.cover)" 
               :alt="product.title"
               class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
             />
@@ -84,6 +84,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { getProductList } from '@/utils/api'
 import formatTime from '@/utils/formatTime'
+import { getImageUrl } from '@/utils/imageUrl';
 import Empty from '@/components/Empty.vue'
 
 const router = useRouter()

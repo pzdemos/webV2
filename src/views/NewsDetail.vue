@@ -33,7 +33,7 @@
           <div class="mb-6">
             <div
               class="w-full h-64 bg-cover bg-center rounded-lg shadow-md"
-              :style="{ backgroundImage: `url(http://localhost:5200${currentNews.cover})` }"
+              :style="{ backgroundImage: `url(http://121.43.33.235:5210${currentNews.cover})` }"
             ></div>
           </div>
           <div class="prose dark:prose-dark max-w-none" v-html="'&nbsp;' + currentNews.content"></div>

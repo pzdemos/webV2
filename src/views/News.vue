@@ -74,7 +74,7 @@
       >
         <figure class="h-40 overflow-hidden rounded-t-lg">
           <img
-            :src="`http://localhost:5200${item.cover}`"
+            :src="getImageUrl(item.cover)"
             alt="News Image"
             class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300"
           />
@@ -124,7 +124,7 @@
                   @click="goNewsDetail(item.nid)"
                 >
                   <img
-                    :src="`http://localhost:5200${item.cover}`"
+                    :src="getImageUrl(item.cover)"
                     alt="News Image"
                     class="w-full md:w-32 h-24 object-cover rounded-lg mb-4 md:mb-0 md:mr-4 flex-shrink-0"
                   />
@@ -192,13 +192,14 @@ import formatTime from "@/utils/formatTime";
 import { useRouter } from "vue-router";
 import Empty from "@/components/Empty.vue";
 import _ from "lodash";
+import { getImageUrl } from '@/utils/imageUrl';
 
 const searchText = ref("");
 const visible = ref(false);
 const newlist = ref([]);
 const topNewsList = ref([]);
 const router = useRouter();
-const newsBgImage = ref("http://localhost:5200/asset/new-bg.jpg");
+const newsBgImage = ref(getImageUrl("/asset/new-bg.jpg"));
 
 // 新闻分类映射
 const categoryMap = {
@@ -269,7 +270,7 @@ onMounted(async () => {
       
       if (configs.news_bg_image) {
         console.log('News组件：设置背景图为', configs.news_bg_image);
-        newsBgImage.value = `http://localhost:5200${configs.news_bg_image}`;
+        newsBgImage.value = getImageUrl(configs.news_bg_image);
       } else {
         console.warn('News组件：未找到news_bg_image配置，使用默认值');
       }
