@@ -31,11 +31,16 @@
               </router-link>
             </template>
           </li>
-          <!-- 登出按钮（仅在登录状态下显示） -->
+          <!-- 登出按钮（仅在登录状态下显示）或登录按钮 -->
           <li v-if="userStore.isLoggedIn()">
             <a @click="handleLogout" class="nav-text hover:bg-white/10 rounded-lg transition-all duration-300">
               登出
             </a>
+          </li>
+          <li v-else>
+            <router-link to="/login" class="nav-text hover:bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-lg transition-all duration-300">
+              登录
+            </router-link>
           </li>
         </ul>
       </div>
@@ -60,7 +65,7 @@
     </div>
 
     <!-- 用户区域 -->
-    <div class="flex-none ml-2">
+    <div class="flex-none ml-2 mr-4">
       <div v-if="userStore.isLoggedIn()" class="dropdown dropdown-end">
         <label tabindex="0" class="btn btn-ghost flex items-center gap-1">
           <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">
@@ -85,9 +90,10 @@
       <router-link 
         v-else 
         to="/login" 
-        class="hidden md:flex btn btn-sm btn-outline bg-transparent border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white transition-all duration-300"
+        class="hidden md:flex btn btn-sm login-btn relative overflow-hidden group transition-all duration-300 px-6"
       >
-        登录
+        <span class="relative z-10">登录</span>
+        <span class="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 opacity-0 group-hover:opacity-100 transition-all duration-300"></span>
       </router-link>
     </div>
 
@@ -224,4 +230,39 @@ onMounted(async () => {
   border-color: rgba(255, 255, 255, 0.1);
 }
 
+/* 登录按钮样式 */
+.login-btn {
+  background-color: transparent;
+  color: white;
+  font-weight: 500;
+  border: 1px solid transparent;
+  border-image: linear-gradient(to right, #60a5fa, #a855f7);
+  border-image-slice: 1;
+  box-shadow: 0 0 10px rgba(96, 165, 250, 0.2);
+  transform: translateY(0);
+  margin-right: 0.75rem;
+  border-radius: 1.5rem;
+  height: 2.25rem;
+}
+
+.login-btn:hover {
+  box-shadow: 0 0 15px rgba(96, 165, 250, 0.4);
+  transform: translateY(-2px);
+  color: white;
+  border-radius: 0;
+}
+
+.login-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 0 5px rgba(96, 165, 250, 0.3);
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+.login-btn {
+  animation: pulse 3s infinite ease-in-out;
+}
 </style>
