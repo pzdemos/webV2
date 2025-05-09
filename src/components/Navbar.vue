@@ -91,13 +91,13 @@
       >
         <span class="text-xs">登录</span>
       </router-link>
-      <router-link 
+      <!-- <router-link 
         v-else 
         to="/profile" 
         class="flex flex-col items-center justify-center w-full h-full nav-link-mobile nav-text px-2 transition-all duration-300"
       >
         <span class="text-xs">我的</span>
-      </router-link>
+      </router-link> -->
     </div>
     
     <!-- 装饰元素 -->
