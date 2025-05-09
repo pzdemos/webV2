@@ -1,7 +1,7 @@
 <template>
   <div class="navbar fixed top-0 left-0 right-0 z-50 backdrop-blur-lg nav-bg border-b">
     <!-- 品牌名称 -->
-    <div class="flex-1">
+    <div class="flex-1" @click="router.push('/')">
       <a class="btn btn-ghost font-serif text-xl md:text-2xl group">
         <span class="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent group-hover:scale-105 transition-transform inline-block">
           {{ brandName }}
@@ -108,7 +108,6 @@
 <script setup>
 import { computed, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-
 import { useUserStore } from '@/stores/user';
 import { getWebsiteConfigs } from "@/utils/api";
 
