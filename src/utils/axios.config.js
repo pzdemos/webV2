@@ -11,7 +11,6 @@ request.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    console.log('发送请求:', config.method.toUpperCase(), config.url);
     return config;
   },
   (error) => {
@@ -22,11 +21,10 @@ request.interceptors.request.use(
 
 request.interceptors.response.use(
   (response) => {
-    console.log('收到响应:', response.config.url, response.status);
     if (response.data && response.data.actionType === 'OK') {
-      console.log('响应数据:', response.data);
+      // console.log('响应数据:', response.data);
     } else {
-      console.warn('响应数据格式异常:', response.data);
+      // console.warn('响应数据格式异常:', response.data);
     }
     return response;
   },

@@ -33,7 +33,6 @@ async function updatePageTitle() {
       
       if (configs.brand_name) {
         document.title = configs.brand_name
-        console.log('页面标题已更新:', configs.brand_name)
       }
     }
   } catch (error) {

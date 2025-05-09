@@ -154,7 +154,6 @@ watchEffect(async () => {
       getNewsDetail(route.params.id),
       getNewsTopList()
     ]);
-    console.log(currentNews.nid)
     currentNews.value = res.data.data[0];
     topNews.value = res2.data.data;
   } catch (error) {

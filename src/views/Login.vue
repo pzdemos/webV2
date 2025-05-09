@@ -250,7 +250,6 @@ onMounted(() => {
     username.value = userStore.getRememberedUsername();
     password.value = userStore.getRememberedPassword();
     rememberMe.value = true;
-    console.log('已从本地存储加载保存的用户信息');
   } else {
     // 如果已登录但没有记住密码，只获取用户名
     if (userStore.isLoggedIn()) {
@@ -269,11 +268,8 @@ watch(rememberMe, (newValue) => {
 // 定义一个方法来处理登录成功后的操作
 const handleLoginSuccess = (result) => {
   if (result.success) {
-    console.log('登录成功');
     if (rememberMe.value) {
-      console.log('用户勾选了记住密码，信息将保存到本地存储');
     } else {
-      console.log('用户未勾选记住密码，不保存密码到本地存储');
     }
     router.push('/');
   }

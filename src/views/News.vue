@@ -261,14 +261,10 @@ const tabNews = computed(() => {
 onMounted(async () => {
   try {
     // 获取新闻列表
-    console.log('News组件：开始获取新闻列表...');
     const newsRes = await getNewsList();
     if (newsRes.data && newsRes.data.data) {
       newlist.value = newsRes.data.data;
       topNewsList.value = newlist.value;
-      console.log('News组件：获取到新闻数据', newlist.value.length, '条');
-    } else {
-      console.warn('News组件：新闻数据格式不正确', newsRes.data);
     }
   } catch (error) {
     console.error('获取新闻列表失败:', error);
@@ -276,16 +272,12 @@ onMounted(async () => {
   
   // 获取网站配置
   try {
-    console.log('News组件：开始获取背景图配置...');
     const configRes = await getWebsiteConfigs();
-    console.log('News组件：获取配置响应', configRes);
     
     if (configRes.data && configRes.data.data) {
       const configs = configRes.data.data;
-      console.log('News组件：获取到配置数据', configs);
       
       if (configs.news_bg_image) {
-        console.log('News组件：设置背景图为', configs.news_bg_image);
         newsBgImage.value = getImageUrl(configs.news_bg_image);
       } else {
         console.warn('News组件：未找到news_bg_image配置，使用默认值');

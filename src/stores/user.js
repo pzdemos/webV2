@@ -35,14 +35,12 @@ export const useUserStore = defineStore('user', () => {
       if (userData.rememberMe) {
         localStorage.setItem('rememberMe', 'true')
         localStorage.setItem('savedUsername', userData.username)
-        localStorage.setItem('savedPassword', btoa(userData.password)) // 简单编码
-        console.log('密码已保存到本地存储', { username: userData.username })
+        localStorage.setItem('savedPassword', btoa(userData.password)) 
       } else {
         // 如果不记住密码，清除之前存储的密码
         localStorage.removeItem('rememberMe')
         localStorage.removeItem('savedUsername')
         localStorage.removeItem('savedPassword')
-        console.log('已清除本地存储的密码')
       }
       
       ElMessage.success('登录成功！')
