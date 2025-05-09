@@ -208,7 +208,7 @@ const visible = ref(false);
 const newlist = ref([]);
 const topNewsList = ref([]);
 const router = useRouter();
-const newsBgImage = ref(getImageUrl("/asset/new-bg.jpg"));
+const newsBgImage = ref(getImageUrl('/asset/new-bg.jpg'));
 
 // 新闻分类映射
 const categoryMap = {
