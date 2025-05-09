@@ -98,7 +98,7 @@
       <div class="flex flex-col lg:flex-row lg:space-x-6">
         <!-- 分类标签 -->
         <div class="w-full lg:w-1/2">
-          <ul class="flex justify-center items-center rounded-t-lg overflow-hidden border-b-2 border-gray-300 dark:border-gray-700">
+          <ul class="flex justify-center items-center rounded-t-lg overflow-hidden border-b-2 border-gray-300 dark:border-gray-700 max-w-2xl mx-auto bg-gray-50 dark:bg-gray-800">
             <li
               v-for="(tab, index) in tabList"
               :key="tab.name"
@@ -111,8 +111,8 @@
               <a
                 href="#"
                 @click.prevent="activeName = tab.name"
-                :class="activeName === tab.name ? 'bg-gradient-to-r from-blue-600 to-teal-600 text-white border-b-0' : 'text-gray-500 dark:text-gray-400 border-b-2 border-transparent'"
-                class="block py-2 px-4 sm:px-6 font-semibold text-center transition-all duration-300 ease-in-out hover:bg-primary-light"
+                :class="activeName === tab.name ? 'bg-gradient-to-r from-blue-600 to-teal-600 text-white border-b-0' : 'text-gray-500 dark:text-gray-400 border-b-2 border-transparent bg-gray-50 dark:bg-gray-800'"
+                class="flex w-full py-3 px-5 md:px-8 font-medium items-center justify-center transition-all duration-300 ease-in-out hover:bg-blue-50 dark:hover:bg-blue-900/10 whitespace-nowrap overflow-hidden text-ellipsis min-h-[3rem]"
               >
                 {{ tab.label }}
               </a>
@@ -123,24 +123,26 @@
               <!-- 新闻列表 -->
               <div v-for="item in tabNews[activeName]" :key="item.nid">
                 <div
-                  class="border border-gray-700/30 mb-4 rounded-lg p-4 cursor-pointer hover:bg-gray-100/10 hover:border-blue-500/30 flex items-center space-x-4 transition-all duration-300"
+                  class="border border-gray-700/30 mb-4 rounded-lg p-4 cursor-pointer hover:bg-gray-100/10 hover:border-blue-500/30 transition-all duration-300 bg-white dark:bg-gray-800/90 shadow-sm hover:shadow-md"
                   @click="goNewsDetail(item.nid)"
                 >
-                  <div class="w-full md:w-32 h-24 rounded-lg mb-4 md:mb-0 md:mr-4 flex-shrink-0 overflow-hidden p-0 m-0">
-                    <ImageLoader
-                      :src="getImageUrl(item.cover)"
-                      alt="News Image"
-                      imageClass="w-full h-full object-cover"
-                      style="display: block; margin: 0; padding: 0;"
-                    />
-                  </div>
-                  <div>
-                    <h3 class="text-lg font-semibold light:text-black dark:text-primary-light mb-2">
-                      {{ item.title }}
-                    </h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">
-                      {{ formatTime.getTime(item.updateTime) }}
-                    </p>
+                  <div class="flex flex-col md:flex-row md:items-center md:space-x-4">
+                    <div class="w-full md:w-32 h-48 md:h-24 rounded-lg mb-4 md:mb-0 flex-shrink-0 overflow-hidden">
+                      <ImageLoader
+                        :src="getImageUrl(item.cover)"
+                        alt="News Image"
+                        imageClass="w-full h-full object-cover"
+                        style="display: block; margin: 0; padding: 0;"
+                      />
+                    </div>
+                    <div class="flex-1">
+                      <h3 class="text-lg font-semibold light:text-black dark:text-primary-light mb-2">
+                        {{ item.title }}
+                      </h3>
+                      <p class="text-sm text-gray-600 dark:text-gray-400">
+                        {{ formatTime.getTime(item.updateTime) }}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -198,7 +200,7 @@ import formatTime from "@/utils/formatTime";
 import { useRouter } from "vue-router";
 import ImageLoader from "@/components/ImageLoader.vue";
 import Empty from "@/components/Empty.vue";
-import _ from "lodash";
+// lodash已移除，使用原生JavaScript实现分组功能
 import { getImageUrl } from '@/utils/imageUrl';
 
 const searchText = ref("");
@@ -225,28 +227,35 @@ const getCategoryName = (category) => {
 const tabList = ref([
   {
     label: "公司新闻",
-    name: 1,
+    name: "1",
   },
   {
     label: "行业资讯",
-    name: 2,
+    name: "2",
   },
   {
     label: "技术分享",
-    name: 3,
+    name: "3",
   },
   {
     label: "最新热点",
-    name: 4,
+    name: "4",
   },
 ]);
 
 const activeName = ref(tabList.value[0].name);
 
-// 根据分类分组
-const tabNews = computed(() =>
-  _.groupBy(newlist.value, (item) => item.category)
-);
+// 根据分类分组（确保category作为字符串处理）- 原生JavaScript实现
+const tabNews = computed(() => {
+  return newlist.value.reduce((acc, item) => {
+    const category = String(item.category);
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(item);
+    return acc;
+  }, {});
+});
 
 // 获取新闻列表和网站配置
 onMounted(async () => {
@@ -449,13 +458,12 @@ button.fixed:hover {
   border-color: rgba(255, 255, 255, 0.8);
 }
 
-/* 深色模式 */
-.dark button.fixed {
+button.fixed {
   background: rgba(75, 85, 99, 0.8);
   border-color: rgba(255, 255, 255, 0.3);
 }
 
-.dark button.fixed:hover {
+button.fixed:hover {
   background: rgba(16, 185, 129, 0.95); /* 使用绿色 */
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
 }
@@ -567,12 +575,6 @@ button.fixed span {
     width: 24px;
     height: 38px;
   }
-
-  /* 调整分类标签的布局 */
-
-
-
-
   ul.news-card {
   display: flex;
   flex-direction: column;

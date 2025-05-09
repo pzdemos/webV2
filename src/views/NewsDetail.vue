@@ -187,16 +187,30 @@ const handleChange = (id) => {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* 暗色主题样式 */
+/* 主题样式 */
 :deep(.prose) {
-  color: #e5e7eb;
+  color: #1e293b; /* 浅色模式下文本为深色 */
 }
 
 :deep(.prose h1), 
 :deep(.prose h2), 
 :deep(.prose h3), 
 :deep(.prose h4) {
-  color: white;
+  color: #1e293b; /* 浅色模式下标题为深色 */
+}
+
+/* 暗色模式下的文本颜色 */
+@media (prefers-color-scheme: dark) {
+  :deep(.prose) {
+    color: #e5e7eb;
+  }
+
+  :deep(.prose h1), 
+  :deep(.prose h2), 
+  :deep(.prose h3), 
+  :deep(.prose h4) {
+    color: white;
+  }
 }
 
 /* 滚动条样式 */
@@ -222,53 +236,106 @@ const handleChange = (id) => {
   background-color: rgba(156, 163, 175, 0.8);
 }
 
-/* 暗色模式卡片样式 */
+/* 卡片样式 */
 .news-card {
   border-radius: 1rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  background-color: #1e293b;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  background-color: white; /* 浅色模式背景 */
+  border: 1px solid rgba(0, 0, 0, 0.1); /* 浅色模式边框 */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* 浅色模式阴影 */
 }
 
 .news-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); /* 浅色模式悬停阴影 */
+}
+
+/* 暗色模式卡片样式 */
+@media (prefers-color-scheme: dark) {
+  .news-card {
+    background-color: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  }
+
+  .news-card:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  }
 }
 
 .news-item {
   transition: all 0.2s ease-in-out;
-  background-color: rgba(30, 41, 59, 0.7);
+  background-color: rgba(243, 244, 246, 0.7); /* 浅色模式背景 */
   border: 1px solid transparent;
 }
 
 .news-item:hover {
-  background-color: rgba(30, 58, 138, 0.3);
-  border-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(59, 130, 246, 0.1); /* 浅色模式悬停背景 */
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* 暗色模式新闻项样式 */
+@media (prefers-color-scheme: dark) {
+  .news-item {
+    background-color: rgba(30, 41, 59, 0.7);
+  }
+
+  .news-item:hover {
+    background-color: rgba(30, 58, 138, 0.3);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
 }
 
 .btn-back {
   border-radius: 9999px;
   transition: all 0.2s ease;
-  background-color: rgba(30, 41, 59, 0.7);
-  color: #e5e7eb;
+  background-color: rgba(243, 244, 246, 0.7); /* 浅色模式背景 */
+  color: #1e293b; /* 浅色模式文本颜色 */
 }
 
 .btn-back:hover {
-  background-color: rgba(59, 130, 246, 0.3);
+  background-color: rgba(59, 130, 246, 0.2); /* 浅色模式悬停背景 */
   transform: scale(1.05);
+}
+
+/* 暗色模式返回按钮样式 */
+@media (prefers-color-scheme: dark) {
+  .btn-back {
+    background-color: rgba(30, 41, 59, 0.7);
+    color: #e5e7eb;
+  }
+
+  .btn-back:hover {
+    background-color: rgba(59, 130, 246, 0.3);
+  }
 }
 
 .category-tag {
   transition: all 0.2s ease;
-  background-color: rgba(59, 130, 246, 0.3);
-  color: #93c5fd;
+  background-color: rgba(59, 130, 246, 0.1); /* 浅色模式背景 */
+  color: #3b82f6; /* 浅色模式文本颜色 */
+}
+
+/* 暗色模式分类标签样式 */
+@media (prefers-color-scheme: dark) {
+  .category-tag {
+    background-color: rgba(59, 130, 246, 0.3);
+    color: #93c5fd;
+  }
 }
 
 .news-image {
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 浅色模式阴影 */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05); /* 浅色模式边框 */
+}
+
+/* 暗色模式图片样式 */
+@media (prefers-color-scheme: dark) {
+  .news-image {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
 }
 
 .news-image:hover {

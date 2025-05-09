@@ -1,23 +1,25 @@
 <template>
-  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transform hover:shadow-xl transition duration-300">
-    <div class="bg-gradient-to-r from-blue-500/90 to-purple-500/90 p-4 flex items-center justify-between">
-      <h3 class="text-xl font-bold text-white flex items-center space-x-2">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transform hover:shadow-xl transition duration-300 border border-gray-100 dark:border-gray-700">
+    <div class="relative bg-white dark:bg-gray-800 p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
+      <!-- 顶部装饰条 -->
+      <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500"></div>
+      <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center space-x-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
         </svg>
         <span>评论</span>
-        <span class="inline-flex items-center justify-center bg-white/20 text-white text-sm rounded-full w-6 h-6 ml-2">
+        <span class="inline-flex items-center justify-center bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-sm rounded-full w-6 h-6 ml-2">
           {{ totalComments }}
         </span>
       </h3>
       <button 
         @click="refreshComments" 
-        class="text-white hover:text-blue-100 transition-all duration-300 flex items-center text-sm bg-white/10 hover:bg-white/20 px-3 py-1 rounded-full"
+        class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 flex items-center text-sm bg-gray-100 dark:bg-gray-700 hover:bg-blue-50 dark:hover:bg-blue-900/30 px-3 py-1 rounded-full"
         :disabled="loading"
       >
         <svg 
           xmlns="http://www.w3.org/2000/svg" 
-          class="h-4 w-4 mr-1" 
+          class="h-4 w-4 mr-1 text-blue-600 dark:text-blue-400" 
           :class="{ 'animate-spin': loading }"
           fill="none" 
           viewBox="0 0 24 24" 
@@ -38,7 +40,7 @@
       />
       
       <!-- 评论列表 -->
-      <div v-if="loading && !hasLoadedOnce" class="py-8 text-center text-gray-500 dark:text-gray-400">
+      <div v-if="loading && !hasLoadedOnce" class="py-8 text-center text-gray-600 dark:text-gray-400">
         <div class="loading-bubble">
           <span></span>
           <span></span>
@@ -214,7 +216,7 @@ onMounted(() => {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background-color: #60a5fa;
+  background: linear-gradient(to right, #3b82f6, #8b5cf6, #6366f1);
   animation: bubble-bounce 1.5s infinite ease-in-out;
 }
 

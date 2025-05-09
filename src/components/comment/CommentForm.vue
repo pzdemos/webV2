@@ -4,7 +4,7 @@
     <button 
       v-if="!isExpanded" 
       @click="expandForm"
-      class="w-full bg-gray-800 shadow-gray-900/30 rounded-xl p-3 border border-blue-900/30 flex items-center justify-between transition-all duration-300 hover:shadow-md hover:border-blue-800/40 group"
+      class="w-full bg-white dark:bg-gray-800 shadow-md dark:shadow-gray-900/30 rounded-xl p-3 border border-gray-200 dark:border-gray-700 flex items-center justify-between transition-all duration-300 hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-700 group"
     >
       <div class="flex items-center">
         <!-- 用户头像 - 使用首字母 -->
@@ -33,17 +33,20 @@
         v-show="isExpanded"
         class="transform transition-all duration-500 hover:scale-[1.01]"
       >
-        <div class="bg-gray-800 shadow-gray-900/30 rounded-xl p-4 border border-blue-900/30 overflow-hidden relative">
+        <div class="bg-white dark:bg-gray-800 shadow-md dark:shadow-gray-900/30 rounded-xl p-4 border border-gray-200 dark:border-gray-700 overflow-hidden relative">
+          <!-- 移除了顶部装饰条 -->
           <!-- 装饰波浪背景 -->
-          <div class="absolute -top-24 -right-24 w-44 h-44 bg-gradient-to-br from-blue-500/5 to-purple-500/5 rounded-full blur-xl"></div>
-          <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-gradient-to-br from-purple-500/5 to-blue-500/5 rounded-full blur-xl"></div>
+          <div class="absolute -top-24 -right-24 w-44 h-44 bg-gradient-to-br from-blue-500/10 to-purple-500/10 dark:from-blue-500/5 dark:to-purple-500/5 rounded-full blur-xl"  @click="collapseForm"></div>
+          <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-gradient-to-br from-purple-500/10 to-blue-500/10 dark:from-purple-500/5 dark:to-blue-500/5 rounded-full blur-xl"></div>
           
           <!-- 标题和关闭按钮 -->
           <div class="flex items-center justify-between mb-3">
             <h4 class="text-lg font-medium text-gray-800 dark:text-white flex items-center">
+              <div>
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
               </svg>
+            </div>
               发表评论
             </h4>
             
@@ -58,7 +61,7 @@
           </div>
           
           <!-- 未登录状态提示和登录链接 -->
-          <div v-if="!isLoggedIn" class="mb-4 p-5 rounded-xl bg-blue-900/20 border border-blue-800/30">
+          <div v-if="!isLoggedIn" class="mb-4 p-5 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800/30">
             <div class="flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -85,7 +88,7 @@
             <div class="relative">
               <textarea
                 v-model="content"
-                class="w-full p-3 bg-slate-800/80 text-gray-200 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent resize-none shadow-inner transition-all duration-300 min-h-[100px] placeholder-gray-500"
+                class="w-full bg-white dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg border border-gray-300 dark:border-gray-600 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 resize-none min-h-[120px] placeholder-gray-500"
                 placeholder="说点什么吧..."
                 @focus="isInputFocused = true"
                 @blur="isInputFocused = false"
@@ -111,7 +114,7 @@
               <div class="flex space-x-2">
                 <button
                   @click="collapseForm"
-                  class="px-4 py-2 rounded-lg text-gray-500 bg-transparent hover:bg-gray-700 hover:text-gray-300 transition-all duration-300"
+                  class="px-4 py-2 rounded-lg text-gray-600 dark:text-gray-400 bg-transparent hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-300 transition-all duration-300"
                 >
                   取消
                 </button>
@@ -119,7 +122,7 @@
                 <button
                   @click="submitComment"
                   :disabled="!canSubmit || submitting"
-                  class="inline-flex items-center text-sm px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-300 shadow-md hover:shadow-lg active:scale-95"
+                  class="inline-flex items-center text-sm px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white rounded-lg transition-all duration-300 shadow-md hover:shadow-lg active:scale-95"
                 >
                   <!-- 按钮内闪光效果 -->
                   <span 

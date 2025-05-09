@@ -184,11 +184,13 @@ onMounted(() => {
   background: white;
   z-index: -1;
   border-radius: inherit;
-  transition: opacity 0.3s ease;
+  transition: all 0.3s ease;
 }
 
-.dark .product-card::after {
-  background: #1f2937;
+@media (prefers-color-scheme: dark) {
+  .product-card::after {
+    background: #1f2937;
+  }
 }
 
 .btn-more {
@@ -261,28 +263,30 @@ onMounted(() => {
 }
 
 /* 深色模式适配 */
-.dark .product-card {
-  background: rgba(31, 41, 55, 0.8);
-}
+@media (prefers-color-scheme: dark) {
+  .product-card {
+    background: rgba(31, 41, 55, 0.8);
+  }
 
-.dark .loading-spinner {
-  border-color: #374151;
-  border-top-color: #60a5fa;
-}
+  .loading-spinner {
+    border-color: #374151;
+    border-top-color: #60a5fa;
+  }
 
-.dark .product-card::before {
-  background: linear-gradient(45deg, #3b82f6, #8b5cf6, #ec4899);
-}
+  .product-card::before {
+    background: linear-gradient(45deg, #3b82f6, #8b5cf6, #ec4899);
+  }
 
-.dark .prose {
-  color: #e5e7eb;
-}
+  .prose {
+    color: #e5e7eb;
+  }
 
-.dark .prose h1, 
-.dark .prose h2, 
-.dark .prose h3, 
-.dark .prose h4 {
-  color: white;
+  .prose h1, 
+  .prose h2, 
+  .prose h3, 
+  .prose h4 {
+    color: white;
+  }
 }
 /* 搜索框样式 */
 .search-input {
@@ -299,32 +303,36 @@ onMounted(() => {
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
 }
 
-[data-theme="light"] .search-input {
+/* 浅色模式 */
+.search-input {
   background-color: rgba(255, 255, 255, 0.9);
   border-color: #e2e8f0;
   color: #334155;
 }
 
-[data-theme="light"] .search-input::placeholder {
+.search-input::placeholder {
   color: #94a3b8;
 }
 
-[data-theme="dark"] .search-input {
-  background-color: rgba(31, 41, 55, 0.8);
-  border-color: #374151;
-}
-
-[data-theme="dark"] .search-input:focus {
-  border-color: rgba(59, 130, 246, 0.6);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
-}
-
-[data-theme="light"] .subtitle-text {
+.subtitle-text {
   color: #64748b;
 }
 
-[data-theme="dark"] .subtitle-text {
-  color: #94a3b8;
+/* 深色模式 */
+@media (prefers-color-scheme: dark) {
+  .search-input {
+    background-color: rgba(31, 41, 55, 0.8);
+    border-color: #374151;
+  }
+
+  .search-input:focus {
+    border-color: rgba(59, 130, 246, 0.6);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+  }
+
+  .subtitle-text {
+    color: #94a3b8;
+  }
 }
 
 /* 添加搜索框点击效果 */

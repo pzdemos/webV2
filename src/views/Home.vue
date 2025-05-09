@@ -217,38 +217,13 @@ const startTypingAnimation = () => {
     opacity: 0.5;
   }
 }
-/* 主题响应式样式 */
-[data-theme="light"] .hero-bg {
-  background-color: #f8fafc;
-  background-image: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-}
-
-[data-theme="dark"] .hero-bg {
+.hero-bg {
   background-color: #0f172a;
   background-image: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
 }
-
-[data-theme="light"] .glass-card {
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  box-shadow: 0 8px 32px 0 rgba(100, 116, 139, 0.1);
-}
-
-[data-theme="light"] .main-title {
-  background: linear-gradient(to right, #3b82f6, #8b5cf6);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  text-shadow: 0 2px 10px rgba(99, 102, 241, 0.2);
-}
-
-[data-theme="dark"] .main-title {
+.main-title {
   color: white;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-}
-
-[data-theme="light"] .animate-blink {
-  animation: blinkLight 1s step-end infinite;
 }
 
 @keyframes blinkLight {

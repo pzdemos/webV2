@@ -1,6 +1,9 @@
 <template>
   <div class="loading-overlay">
     <div class="loading-content">
+      <!-- 顶部装饰条 -->
+      <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500"></div>
+      
       <div class="spinner">
         <div class="double-bounce1"></div>
         <div class="double-bounce2"></div>
@@ -26,7 +29,7 @@ defineProps({
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(15, 23, 42, 0.6); /* dark:from-gray-900 */
   backdrop-filter: blur(3px);
   display: flex;
   align-items: center;
@@ -45,16 +48,20 @@ defineProps({
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 255, 255, 0.15);
+  position: relative;
+  overflow: hidden;
+  background-color: white;
   padding: 2rem;
   border-radius: 0.75rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  min-width: 200px;
 }
 
 .loading-text {
   margin-top: 1rem;
   font-size: 1rem;
-  color: #ffffff;
+  color: #1e293b; /* dark:text-white */
   font-weight: 500;
 }
 
@@ -68,8 +75,8 @@ defineProps({
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background-color: #ffffff;
-  opacity: 0.6;
+  background: linear-gradient(to right, #3b82f6, #8b5cf6, #6366f1); /* from-blue-500 via-purple-500 to-indigo-500 */
+  opacity: 0.7;
   position: absolute;
   top: 0;
   left: 0;
@@ -87,8 +94,5 @@ defineProps({
     transform: scale(1.0);
   }
 }
-
-:root[data-theme="dark"] .loading-content {
-  background-color: rgba(30, 41, 59, 0.4);
-}
+/* 移除重复的样式 */
 </style> 

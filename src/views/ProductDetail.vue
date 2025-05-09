@@ -195,23 +195,6 @@ onMounted(() => {
   margin: 1.5rem 0;
 }
 
-/* 深色模式调整 */
-.dark .prose {
-  color: #e5e7eb;
-}
-
-.dark .prose h1, 
-.dark .prose h2, 
-.dark .prose h3, 
-.dark .prose h4 {
-  color: white;
-}
-
-.dark .loading-spinner {
-  border-color: #374151;
-  border-top-color: #60a5fa;
-}
-
 /* 滚动条样式 */
 .comments-container {
   scrollbar-width: thin;
