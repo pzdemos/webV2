@@ -10,41 +10,8 @@
       </a>
     </div>
 
-    <!-- 移动端汉堡菜单 -->
-    <div class="flex-none md:hidden">
-      <div class="dropdown dropdown-end">
-        <label tabindex="0" class="btn btn-ghost nav-text hover:bg-white/10">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </label>
-        <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-lg nav-dropdown backdrop-blur rounded-box w-52 border">
-          <li v-for="(item, index) in filteredMenuItems" :key="index">
-            <template v-if="item.external">
-              <a :href="item.path" target="_blank" rel="noopener noreferrer" class="nav-text hover:bg-white/10 rounded-lg transition-all duration-300">
-                {{ item.name }}
-              </a>
-            </template>
-            <template v-else>
-              <router-link :to="item.path" active-class="active" class="nav-text hover:bg-white/10 rounded-lg transition-all duration-300">
-                {{ item.name }}
-              </router-link>
-            </template>
-          </li>
-          <!-- 登出按钮（仅在登录状态下显示）或登录按钮 -->
-          <li v-if="userStore.isLoggedIn()">
-            <a @click="handleLogout" class="nav-text hover:bg-white/10 rounded-lg transition-all duration-300">
-              登出
-            </a>
-          </li>
-          <li v-else>
-            <router-link to="/login" class="nav-text hover:bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-lg transition-all duration-300">
-              登录
-            </router-link>
-          </li>
-        </ul>
-      </div>
-    </div>
+    <!-- 移动端空间占位 -->
+    <div class="flex-none md:hidden"></div>
 
     <!-- 桌面端菜单 -->
     <div class="hidden md:flex flex-1 justify-center">
@@ -100,6 +67,41 @@
 
     <!-- 装饰元素 -->
     <div class="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
+  </div>
+
+  <!-- 手机端底部菜单 -->  
+  <div class="md:hidden fixed bottom-0 left-0 right-0 z-50 backdrop-blur-lg nav-bg border-t">
+    <div class="flex justify-around items-center h-14">
+      <router-link 
+        v-for="(item, index) in filteredMenuItems" 
+        :key="index" 
+        :to="item.path" 
+        active-class="active-mobile" 
+        class="flex flex-col items-center justify-center w-full h-full nav-link-mobile nav-text px-2 transition-all duration-300"
+      >
+        <span class="text-xs">{{ item.name }}</span>
+        <div class="w-0 hover:w-full h-0.5 bg-gradient-to-r from-blue-400 to-purple-400 transition-all duration-300"></div>
+      </router-link>
+      
+      <!-- 登录/我的按钮 -->
+      <router-link 
+        v-if="!userStore.isLoggedIn()" 
+        to="/login" 
+        class="flex flex-col items-center justify-center w-full h-full nav-link-mobile nav-text px-2 transition-all duration-300"
+      >
+        <span class="text-xs">登录</span>
+      </router-link>
+      <router-link 
+        v-else 
+        to="/profile" 
+        class="flex flex-col items-center justify-center w-full h-full nav-link-mobile nav-text px-2 transition-all duration-300"
+      >
+        <span class="text-xs">我的</span>
+      </router-link>
+    </div>
+    
+    <!-- 装饰元素 -->
+    <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
   </div>
 </template>
 
@@ -264,5 +266,33 @@ onMounted(async () => {
 
 .login-btn {
   animation: pulse 3s infinite ease-in-out;
+}
+
+/* 手机端底部菜单样式 */
+.nav-link-mobile {
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-link-mobile::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(to right, #60a5fa, #a855f7);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.nav-link-mobile:hover::after,
+.active-mobile::after {
+  width: 80%;
+}
+
+.active-mobile {
+  color: white;
+  background: linear-gradient(to bottom, rgba(96, 165, 250, 0.1), rgba(168, 85, 247, 0.1));
 }
 </style>
