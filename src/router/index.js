@@ -6,6 +6,7 @@ import Products from "@/views/Products.vue";
 import ProductDetail from "@/views/ProductDetail.vue";
 import Login from "@/views/Login.vue";
 import Register from '@/views/Register.vue';
+import Profile from '@/views/Profile.vue';
 import { useUserStore } from '@/stores/user';
 
 const routes = [
@@ -48,6 +49,14 @@ const routes = [
         component: Register,
         meta: {
             hideForAuth: true
+        }
+    },
+    {
+        path: '/profile',
+        name: 'profile',
+        component: Profile,
+        meta: {
+            requiresAuth: true
         }
     },
     {

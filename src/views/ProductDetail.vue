@@ -49,14 +49,14 @@
                 <span class="text-2xl font-bold text-gray-800 dark:text-white">¥{{ product.price }}</span>
                 <span class="ml-2 text-gray-500 dark:text-gray-400">参考价格</span>
               </div>
-              <div class="flex space-x-2 mt-2 sm:mt-0">
+              <!-- <div class="flex space-x-2 mt-2 sm:mt-0">
                 <button class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
                   <span>咨询详情</span>
                 </button>
                 <button class="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-lg transition-colors">
                   <span>收藏</span>
                 </button>
-              </div>
+              </div> -->
             </div>
 
             <!-- 产品简介 -->

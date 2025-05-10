@@ -12,6 +12,13 @@ const getProductDetail = (id) => request.get(`/product/detail/${id}`);
 // 用户相关API
 const login = (data) => request.post("/user/login", data);
 const register = (data) => request.post("/user/register", data);
+const getUserProfile = (uid = null) => uid ? request.get(`/user/profile/${uid}`) : request.get("/user/profile");
+const updateUserProfile = (data) => request.put("/user/profile", data);
+const uploadUserAvatar = (formData) => request.post("/user/upload-avatar", formData, {
+  headers: {
+    'Content-Type': 'multipart/form-data'
+  }
+});
 
 // 评论相关API
 /**
@@ -53,6 +60,9 @@ export {
     getProductDetail,
     login,
     register,
+    getUserProfile,
+    updateUserProfile,
+    uploadUserAvatar,
     getCommentList,
     addComment,
     deleteComment,

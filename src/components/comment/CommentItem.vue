@@ -6,11 +6,13 @@
     <div class="absolute inset-0 bg-gradient-to-r from-blue-100/0 via-blue-100/0 to-blue-100/0 dark:from-blue-900/0 dark:via-blue-900/0 dark:to-blue-900/0 group-hover:from-blue-100/50 group-hover:via-blue-100/30 group-hover:to-blue-100/0 dark:group-hover:from-blue-900/20 dark:group-hover:via-blue-900/10 dark:group-hover:to-blue-900/0 transition-all duration-700"></div>
     
     <div class="flex space-x-3 relative">
-      <!-- 用户头像 - 使用首字母 -->
+      <!-- 用户头像 - 可点击 -->
       <div class="avatar-wrapper">
         <div 
-          class="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold shadow-md hover:shadow-lg hover:scale-110 transition-all duration-300 ring-2 ring-white dark:ring-gray-800"
+          class="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold shadow-md hover:shadow-lg hover:scale-110 transition-all duration-300 ring-2 ring-white dark:ring-gray-800 cursor-pointer"
           :style="{ background: getUserColor(comment.user ? comment.user.username : '') }"
+          @click="navigateToUserProfile"
+          :title="userStore.isLoggedIn() && comment.user && userStore.uid === comment.user.uid ? '查看我的个人中心' : '查看用户信息'"
         >
           {{ getUserInitial(comment.user ? comment.user.username : '') }}
         </div>
@@ -146,6 +148,7 @@ import { computed, ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { deleteComment } from '@/utils/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { useRouter } from 'vue-router'
 
 const props = defineProps({
   comment: {
@@ -156,6 +159,7 @@ const props = defineProps({
 
 const emit = defineEmits(['comment-deleted', 'like-toggled'])
 const userStore = useUserStore()
+const router = useRouter()
 const loading = ref(false)
 const isLiked = ref(props.comment.isLiked || false)
 const likes = ref(props.comment.likes || 0)
@@ -280,6 +284,18 @@ const toggleLike = () => {
   
   // 这里可以添加实际的API调用逻辑
   // 例如: likeComment(props.comment.id, isLiked.value)
+}
+
+// 导航到用户个人资料页面
+const navigateToUserProfile = () => {
+  // 检查评论是否有用户信息
+  if (!props.comment.user || !props.comment.user.uid) {
+    ElMessage.info('无法查看此用户信息')
+    return
+  }
+  
+  // 跳转到用户个人资料页
+  router.push(`/profile?uid=${props.comment.user.uid}`)
 }
 </script>
 
