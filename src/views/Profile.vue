@@ -206,10 +206,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted, h, computed } from 'vue';
+import { ref, onMounted, h, computed, watch } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { useUserStore } from '@/stores/user';
-import { getUserProfile, updateUserProfile, uploadUserAvatar } from '@/utils/api';
+import { getUserProfile as getUserProfileAPI, updateUserProfile as updateUserProfileAPI, uploadUserAvatar } from '@/utils/api';
 import { getImageUrl } from '@/utils/imageUrl';
 import { useRoute, useRouter } from 'vue-router';
 import { 
@@ -265,25 +265,68 @@ const genderLabels = {
   3: '保密'
 };
 
+// 更新用户信息辅助函数
+const updateUserProfile = async (data) => {
+  try {
+    // 构建要提交的数据
+    const updateData = { ...data };
+    const response = await updateUserProfileAPI(updateData);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // 获取用户信息
 const fetchUserProfile = async () => {
   try {
     loading.value = true;
+    console.log('开始获取用户信息...');
     
     // 从URL参数获取uid，如果没有则获取当前用户信息
     const uidParam = route.query.uid;
+    console.log('当前请求的用户ID:', uidParam || '当前登录用户');
     
-    // 这里应调用后端API获取用户信息
-    // 如果是获取当前用户，则使用getUserProfile
-    // 如果是获取其他用户，则需要后端提供getUserById等API
-    const response = await getUserProfile(uidParam || null);
+    // 确保当前用户已登录
+    if (!uidParam && !userStore.isLoggedIn()) {
+      console.warn('尝试获取当前用户信息，但用户未登录');
+      ElMessage.warning('请先登录后查看个人信息');
+      router.push('/login');
+      return;
+    }
     
-    if (response.data.success) {
+    // 显式添加授权头
+    const requestOptions = {};
+    if (userStore.token) {
+      console.log('使用授权令牌:', userStore.token.substring(0, 10) + '...');
+      requestOptions.headers = {
+        'Authorization': `Bearer ${userStore.token}`
+      };
+    }
+    
+    let response;
+    try {
+      if (uidParam) {
+        console.log(`请求其他用户信息: /user/profile/${uidParam}`);
+        response = await getUserProfileAPI(uidParam);
+      } else {
+        console.log('请求当前用户信息: /user/profile');
+        response = await getUserProfileAPI();
+      }
+      console.log('API响应数据:', response);
+    } catch (apiError) {
+      console.error('API请求失败:', apiError);
+      throw apiError;
+    }
+    
+    if (response && response.data && response.data.success) {
+      console.log('成功获取用户信息:', response.data.data);
       userProfile.value = response.data.data;
       
       // 只有当查看自己的信息时才初始化编辑表单
       if (isCurrentUser.value) {
-        // 初始化编辑表单
+        console.log('初始化当前用户编辑表单');
+        // 初始化编辑表单，保持email字段可为空
         editForm.value = {
           gender: userProfile.value.gender || 3,
           introduction: userProfile.value.introduction || '',
@@ -291,9 +334,13 @@ const fetchUserProfile = async () => {
           education: userProfile.value.education || '',
           skills: userProfile.value.skills || ''
         };
+
+        // 确保编辑状态重置
+        isEditing.value = false;
       }
     } else {
-      ElMessage.error(response.data.message || '获取用户信息失败');
+      console.error('获取用户信息失败，返回数据:', response?.data);
+      ElMessage.error(response?.data?.message || '获取用户信息失败');
       // 如果获取失败且是访问他人信息，跳转回首页
       if (uidParam) {
         router.push('/');
@@ -311,6 +358,33 @@ const fetchUserProfile = async () => {
     loading.value = false;
   }
 };
+
+// 监听路由参数变化，当uid参数变化时重新获取用户信息
+watch(
+  () => route.query.uid,
+  (newUid, oldUid) => {
+    if (newUid !== oldUid) {
+      console.log('用户ID参数变化，从', oldUid, '变为', newUid);
+      fetchUserProfile();
+    }
+  },
+  { immediate: true } // 立即执行一次
+);
+
+// 监听整个路由对象，捕获所有可能的路由变化
+watch(
+  () => route.fullPath,
+  (newPath, oldPath) => {
+    if (newPath !== oldPath) {
+      console.log('路由路径变化，从', oldPath, '变为', newPath);
+      
+      // 仅当是在不同的profile页面之间切换时才刷新
+      if (newPath.includes('/profile') && oldPath.includes('/profile')) {
+        fetchUserProfile();
+      }
+    }
+  }
+);
 
 // 开始编辑
 const startEditing = () => {
@@ -334,7 +408,10 @@ const cancelEditing = () => {
 const saveProfile = async () => {
   try {
     isSaving.value = true;
+    
+    // 使用更新的方法
     const response = await updateUserProfile(editForm.value);
+    
     if (response.data.success) {
       userProfile.value = response.data.data;
       isEditing.value = false;
@@ -352,11 +429,11 @@ const saveProfile = async () => {
 
 // 处理头像点击
 const handleAvatarClick = () => {
-  if (isEditing.value) {
-    // 编辑模式下点击头像触发上传
+  if (canEdit.value && isEditing.value) {
+    // 编辑模式下点击自己的头像触发上传
     document.getElementById('avatar-upload').click();
   } else {
-    // 非编辑模式下预览头像
+    // 非编辑模式下或查看他人头像时，预览头像
     avatarPreviewVisible.value = true;
   }
 };
@@ -430,9 +507,14 @@ const splitSkills = (skillsString) => {
   return skillsString.replace(/，/g, ',').split(',').filter(skill => skill.trim() !== '');
 };
 
-// 页面加载时获取用户信息
+// 页面加载时先尝试直接获取用户信息
 onMounted(() => {
-  fetchUserProfile();
+  console.log('个人资料页面已加载');
+  
+  // 如果用户已登录，先尝试直接获取一次
+  if (userStore.isLoggedIn()) {
+    fetchUserProfile();
+  }
 });
 </script>
 
